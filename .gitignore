@@ -1,3 +1,9 @@
+# Stop experimental files
+main.c
+
+# Stop builds etc
+bin/
+
 # Prerequisites
 *.d
 
