@@ -31,15 +31,12 @@
 		
 */
 struct Packet {
-	union {
-		struct {
-			PACKET_INDEX_SIZE 		index;
-			PACKET_ID_SIZE 			uid;
-			PACKET_OPTION_SIZE 		options;
-			char 					data		[PACKET_DATA_SIZE];
-		} transmitable_data;
-		char receveable_data [1000];
-	};
+	struct {
+		PACKET_INDEX_SIZE 		index;
+		PACKET_ID_SIZE 			uid;
+		PACKET_OPTION_SIZE 		options;
+		char 					data		[PACKET_DATA_SIZE];
+	} transmitable_data;
 	int 					data_size;
 };
 

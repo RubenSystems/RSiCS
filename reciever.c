@@ -18,7 +18,7 @@ int main(int argc, const char * argv[]) {
 	struct Computer recieved_from;
 	struct Packet recieved_packet;
 	recieve_packet(&recieved_packet, listener, &recieved_from);
-	printf("%s", recieved_packet.transmitable_data.data);
+	printf("%s - ", recieved_packet.transmitable_data.data);
 	free(listener);
 	
 	return 0;
