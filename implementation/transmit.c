@@ -19,23 +19,44 @@
 
 
 // MARK: - fragment_into_packets
+static PACKET_ID_SIZE current_index = 0;
+
+static PACKET_ID_SIZE _get_next_id() {
+	int index = current_index;
+	current_index = (current_index + 1) % MAX_PACKET_ID;
+	return index;
+}
+
 void transmit(const char * text, unsigned int length, struct Computer * computer) {
 	for (int offset = 0; offset < length; offset += PACKET_DATA_SIZE) {
 		
 		struct Packet data_packet = {
 			{
 				.index = offset,
-				.uid = offset,
+				.uid = _get_next_id(),
 				.options = length - (offset * PACKET_DATA_SIZE) <= PACKET_DATA_SIZE ? 0b00000001 : 0b00000000,
 
 			},
 			.data_size = length - (offset * PACKET_DATA_SIZE)
 		};
 		memmove(data_packet.transmitable_data.data, text + (offset * PACKET_DATA_SIZE), PACKET_DATA_SIZE);
-		printf("%i\n", data_packet.transmitable_data.options);
 		transmit_packet(&data_packet, computer);
 	}
 }
+
+void ping(struct Computer * computer) {
+	struct Packet ping_packet = {
+		{
+			.index = 0,
+			.uid = _get_next_id(),
+			.options = 0b00000011,
+
+		},
+		.data_size = 0
+	};
+	transmit_packet(&ping_packet, computer);
+}
+
 
 // MARK: - transmit_pakcet
 void transmit_packet(struct Packet * packet, struct Computer * to_computer) {

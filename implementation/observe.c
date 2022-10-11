@@ -11,9 +11,11 @@
 #include <string.h>
 #include <netinet/in.h>
 
+//void observe(struct Computer * recieve_listener,) {
+//	
+//}
+
 void recieve_packet(struct Packet * packet, struct Computer * recieve_listener, struct Computer * from_computer) {
-
-
 	struct sockaddr_storage storage;
 	socklen_t storage_size = sizeof(storage);
 	if (recvfrom(

@@ -8,6 +8,7 @@
 #ifndef config_h
 #define config_h
 
+#include <limits.h>
 
 /*
 	Define the index size. Currently set to a char.
@@ -29,6 +30,8 @@
 	255 is generally a good number as this effectivley is the number of packets that can be processed by the system.
 */
 #define PACKET_ID_SIZE unsigned char
+
+#define MAX_PACKET_ID UCHAR_MAX
 
 
 /*
