@@ -13,7 +13,7 @@
 
 
 int main(int argc, const char * argv[]) {
-	// insert code here...
+	// This is an example of how you set up a listener and start recieving packets on that listener
 	struct Computer * listener = create_listener("5253");
 	struct Computer recieved_from;
 	struct Packet recieved_packet;

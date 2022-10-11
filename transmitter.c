@@ -13,17 +13,8 @@
 
 
 int main(int argc, const char * argv[]) {
-	// insert code here...
-//	struct Packet x = {
-//		{
-//			.index = 0,
-//			.uid = 0,
-//			.options = 0b00000000,
-//			.data = "hello"
-//
-//		},
-//		.data_size = 5
-//	};
+	// This is an example of how you create a computer (something to send data to) and then send messages to it. 
+
 	struct Computer * computer = create_computer("localhost", "5253");
 	transmit("hello there my name is ruben and i am cool!", 43, &computer);
 	free(computer);
