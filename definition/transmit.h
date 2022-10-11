@@ -10,10 +10,10 @@
 
 #include "models.h"
 
-
+void ping(struct Computer *);
 
 void transmit(const char *, unsigned int, struct Computer *);
 
-void transmit_packet(struct Packet *, struct Computer *);
+void _transmit_packet(struct Packet *, struct Computer *);
 
 #endif /* transmit_h */

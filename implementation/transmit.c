@@ -27,6 +27,19 @@ static PACKET_ID_SIZE _get_next_id() {
 	return index;
 }
 
+void ping(struct Computer * computer) {
+	struct Packet ping_packet = {
+		{
+			.index = 0,
+			.uid = _get_next_id(),
+			.options = 0b00000011,
+
+		},
+		.data_size = 0
+	};
+	_transmit_packet(&ping_packet, computer);
+}
+
 void transmit(const char * text, unsigned int length, struct Computer * computer) {
 	for (int offset = 0; offset < length; offset += PACKET_DATA_SIZE) {
 		
@@ -40,27 +53,14 @@ void transmit(const char * text, unsigned int length, struct Computer * computer
 			.data_size = length - (offset * PACKET_DATA_SIZE)
 		};
 		memmove(data_packet.transmitable_data.data, text + (offset * PACKET_DATA_SIZE), PACKET_DATA_SIZE);
-		transmit_packet(&data_packet, computer);
+		_transmit_packet(&data_packet, computer);
 	}
 }
 
-void ping(struct Computer * computer) {
-	struct Packet ping_packet = {
-		{
-			.index = 0,
-			.uid = _get_next_id(),
-			.options = 0b00000011,
-
-		},
-		.data_size = 0
-	};
-	transmit_packet(&ping_packet, computer);
-}
 
 
 // MARK: - transmit_pakcet
-void transmit_packet(struct Packet * packet, struct Computer * to_computer) {
-//	printf("%i, %i", (int)(sizeof(packet->transmitable_data) - PACKET_DATA_SIZE) + packet->data_size, packet->data_size);
+void _transmit_packet(struct Packet * packet, struct Computer * to_computer) {
 	sendto(
 	   to_computer->file_descriptor,
 	   (void *)&((*packet).transmitable_data),
