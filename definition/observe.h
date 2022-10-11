@@ -10,6 +10,14 @@
 
 #include "models.h"
 
+
+enum MessageType {
+	PONG,
+	DATA
+};
+
+
+
 void recieve_packet(struct Packet *, struct Computer *, struct Computer *);
 
 #endif /* observe_h */
