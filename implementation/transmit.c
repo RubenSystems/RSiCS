@@ -40,6 +40,8 @@ void ping(struct Computer * computer) {
 	_transmit_packet(&ping_packet, computer);
 }
 
+
+// TODO: - Error Handling
 void transmit(const char * text, unsigned int length, struct Computer * computer) {
 	for (int offset = 0; offset < length; offset += PACKET_DATA_SIZE) {
 		

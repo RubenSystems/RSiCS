@@ -49,9 +49,14 @@ struct Computer {
 };
 
 
-struct Computer * create_computer(const char *, const char *);
+enum AttachmentResponse {
+	FAIL,
+	SUCCESS
+};
 
-struct Computer * create_listener(const char *);
+enum AttachmentResponse create_computer(const char *, const char *, struct Computer *);
+
+enum AttachmentResponse create_listener(const char *, struct Computer *);
 
 
 #endif /* models_h */

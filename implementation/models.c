@@ -13,7 +13,9 @@
 #include <string.h>
 #include <unistd.h>
 
-struct Computer * create_computer(const char * ip, const char * port) {
+
+
+enum AttachmentResponse create_computer(const char * ip, const char * port, struct Computer * computer) {
 	int fd = 0, rv;
 	struct addrinfo hints, *servinfo, *p;
 	
@@ -23,7 +25,7 @@ struct Computer * create_computer(const char * ip, const char * port) {
 	
 	if ((rv = getaddrinfo(ip, port, &hints, &servinfo)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-		return NULL;
+		return FAIL;
 	}
 	
 	
@@ -35,21 +37,18 @@ struct Computer * create_computer(const char * ip, const char * port) {
 		break;
 	}
 	
-	struct Computer * computer = (struct Computer *)malloc(sizeof(struct Computer));
+
 	
-	struct Computer ret_computer = {
-		.file_descriptor = fd,
-		.socket_address = *(p->ai_addr),
-		.socket_address_size = p->ai_addrlen
-	};
-		
-	*computer = ret_computer;
+	computer->file_descriptor = fd;
+	computer->socket_address = *(p->ai_addr);
+	computer->socket_address_size = p->ai_addrlen;
+	freeaddrinfo(servinfo);
 	
-	return computer;
+	return SUCCESS;
 }
 
 
-struct Computer * create_listener(const char * port) {
+enum AttachmentResponse create_listener(const char * port, struct Computer * computer) {
 	int fd = 0, rv;
 	struct addrinfo * server_info, *p, hints;
 	memset(&hints, 0, sizeof hints);
@@ -59,7 +58,7 @@ struct Computer * create_listener(const char * port) {
 	
 	if ((rv = getaddrinfo(NULL, port, &hints, &server_info)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-		return NULL;
+		return FAIL;
 	}
 	 
 	for(p = server_info; p != NULL; p = p->ai_next) {
@@ -79,22 +78,14 @@ struct Computer * create_listener(const char * port) {
 
 	if (p == NULL) {
 		fprintf(stderr, "listener: failed to bind socket\n");
-		return NULL;
+		return FAIL;
 	}
+	
+	computer->file_descriptor = fd;
+	computer->socket_address = *(p->ai_addr);
+	computer->socket_address_size = (p->ai_addrlen);
 
-	struct Computer * computer = (struct Computer *)malloc(sizeof(struct Computer));
-	
-	struct Computer ret_computer = {
-		.file_descriptor = fd,
-		.socket_address = *(p->ai_addr),
-		.socket_address_size = (p->ai_addrlen)
-	};
-	
-
-	*computer = ret_computer;
-	
 	freeaddrinfo(server_info);
-	
-	return computer;
-	
+
+	return SUCCESS;
 }
