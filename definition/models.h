@@ -50,8 +50,8 @@ struct Computer {
 
 
 enum AttachmentResponse {
-	FAIL,
-	SUCCESS
+	ATTACH_FAIL,
+	ATTACH_SUCCESS
 };
 
 enum AttachmentResponse create_computer(const char *, const char *, struct Computer *);

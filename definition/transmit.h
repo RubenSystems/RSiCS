@@ -10,10 +10,16 @@
 
 #include "models.h"
 
-void ping(struct Computer *);
 
-void transmit(const char *, unsigned int, struct Computer *);
+enum TransmitResponse {
+	TRANSMIT_FAIL,
+	TRANSMIT_SEND
+};
 
-void _transmit_packet(struct Packet *, struct Computer *);
+enum TransmitResponse ping(struct Computer *);
+
+enum TransmitResponse transmit(const char *, unsigned int, struct Computer *);
+
+enum TransmitResponse _transmit_packet(struct Packet *, struct Computer *);
 
 #endif /* transmit_h */

@@ -25,7 +25,7 @@ enum AttachmentResponse create_computer(const char * ip, const char * port, stru
 	
 	if ((rv = getaddrinfo(ip, port, &hints, &servinfo)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-		return FAIL;
+		return ATTACH_FAIL;
 	}
 	
 	
@@ -44,7 +44,7 @@ enum AttachmentResponse create_computer(const char * ip, const char * port, stru
 	computer->socket_address_size = p->ai_addrlen;
 	freeaddrinfo(servinfo);
 	
-	return SUCCESS;
+	return ATTACH_SUCCESS;
 }
 
 
@@ -58,7 +58,7 @@ enum AttachmentResponse create_listener(const char * port, struct Computer * com
 	
 	if ((rv = getaddrinfo(NULL, port, &hints, &server_info)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-		return FAIL;
+		return ATTACH_FAIL;
 	}
 	 
 	for(p = server_info; p != NULL; p = p->ai_next) {
@@ -66,7 +66,6 @@ enum AttachmentResponse create_listener(const char * port, struct Computer * com
 			perror("listener: socket");
 			continue;
 		}
-
 		if (bind(fd, p->ai_addr, p->ai_addrlen) == -1) {
 			close(fd);
 			perror("listener: bind");
@@ -78,7 +77,7 @@ enum AttachmentResponse create_listener(const char * port, struct Computer * com
 
 	if (p == NULL) {
 		fprintf(stderr, "listener: failed to bind socket\n");
-		return FAIL;
+		return ATTACH_FAIL;
 	}
 	
 	computer->file_descriptor = fd;
@@ -87,5 +86,5 @@ enum AttachmentResponse create_listener(const char * port, struct Computer * com
 
 	freeaddrinfo(server_info);
 
-	return SUCCESS;
+	return ATTACH_SUCCESS;
 }

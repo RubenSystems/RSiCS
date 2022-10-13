@@ -11,13 +11,12 @@
 #include "models.h"
 
 
-enum MessageType {
-	PONG,
-	DATA
+enum ObserveResponse {
+	OBSERVE_FAIL,
+	OBSERVE_PONG,
+	OBSERVE_DATA
 };
 
-
-
-void recieve_packet(struct Packet *, struct Computer *, struct Computer *);
+enum ObserveResponse _recieve_packet(struct Packet *, struct Computer *, struct Computer *);
 
 #endif /* observe_h */

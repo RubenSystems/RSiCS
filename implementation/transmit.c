@@ -27,7 +27,7 @@ static PACKET_ID_SIZE _get_next_id() {
 	return index;
 }
 
-void ping(struct Computer * computer) {
+enum TransmitResponse ping(struct Computer * computer) {
 	struct Packet ping_packet = {
 		{
 			.index = 0,
@@ -37,12 +37,15 @@ void ping(struct Computer * computer) {
 		},
 		.data_size = 0
 	};
-	_transmit_packet(&ping_packet, computer);
+	return _transmit_packet(&ping_packet, computer);
 }
 
 
 // TODO: - Error Handling
-void transmit(const char * text, unsigned int length, struct Computer * computer) {
+enum TransmitResponse transmit(const char * text, unsigned int length, struct Computer * computer) {
+	
+	char success = 1;
+	
 	for (int offset = 0; offset < length; offset += PACKET_DATA_SIZE) {
 		
 		struct Packet data_packet = {
@@ -55,22 +58,29 @@ void transmit(const char * text, unsigned int length, struct Computer * computer
 			.data_size = length - (offset * PACKET_DATA_SIZE)
 		};
 		memmove(data_packet.transmitable_data.data, text + (offset * PACKET_DATA_SIZE), PACKET_DATA_SIZE);
-		_transmit_packet(&data_packet, computer);
+		if (_transmit_packet(&data_packet, computer) == TRANSMIT_FAIL) {
+			success = 0;
+		};
 	}
+	return success ? TRANSMIT_SEND : TRANSMIT_FAIL;
 }
 
 
 
 // MARK: - transmit_pakcet
-void _transmit_packet(struct Packet * packet, struct Computer * to_computer) {
-	sendto(
+enum TransmitResponse _transmit_packet(struct Packet * packet, struct Computer * to_computer) {
+	if (sendto(
 	   to_computer->file_descriptor,
 	   (void *)&((*packet).transmitable_data),
 	   (sizeof(packet->transmitable_data) - PACKET_DATA_SIZE) + packet->data_size,
 	   0,
 	   (struct sockaddr *)&to_computer->socket_address,
 	   to_computer->socket_address_size
-   );
+	) == -1) {
+		return TRANSMIT_FAIL;
+	}
+	
+	return TRANSMIT_SEND;
 	
 }
 
