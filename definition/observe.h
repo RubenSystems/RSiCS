@@ -17,6 +17,10 @@ enum ObserveResponse {
 	OBSERVE_DATA
 };
 
+
+// Attach event listener
+void observe(struct Computer *, void (*recieved_message)(int));
+
 enum ObserveResponse _recieve_packet(struct Packet *, struct Computer *, struct Computer *);
 
 #endif /* observe_h */

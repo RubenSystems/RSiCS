@@ -57,4 +57,24 @@
 */
 #define PACKET_DATA_SIZE (MTU - (sizeof(PACKET_INDEX_SIZE) + sizeof(PACKET_ID_SIZE) + sizeof(PACKET_OPTION_SIZE)))
 
+
+/*
+
+	The maximum number of packets that can be recieved per message
+	(if recieving 200, that is MTU (1472) * MAX_PACKETS_IN_FRAME (1472) = 294,400 bytes)
+	The maximum value of this number is the the maximum of an unsigned char. 
+ 
+ */
+
+#define MAX_PACKETS_IN_FRAME 200
+
+
+/*
+	frame pool is the maximum number of incomplete frames allowed 
+ */
+#define FRAME_POOL_SIZE 5
+
+
+
+
 #endif /* config_h */

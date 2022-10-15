@@ -37,16 +37,17 @@ struct Packet {
 		PACKET_OPTION_SIZE 		options;
 		char 					data		[PACKET_DATA_SIZE];
 	} transmitable_data;
-	int 					data_size;
+	int 						data_size;
 };
 
 
 
 struct Computer {
-	int file_descriptor;
-	struct sockaddr socket_address;
-	socklen_t socket_address_size;
+	int 				file_descriptor;
+	struct sockaddr 	socket_address;
+	socklen_t 			socket_address_size;
 };
+
 
 
 enum AttachmentResponse {
