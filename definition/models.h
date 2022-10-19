@@ -48,7 +48,9 @@ struct Computer {
 	socklen_t 			socket_address_size;
 };
 
-
+struct ContentBuffer {
+	char data [MAX_CONTENT_SIZE];
+};
 
 enum AttachmentResponse {
 	ATTACH_FAIL,

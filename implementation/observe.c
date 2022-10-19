@@ -13,31 +13,50 @@
 #include <string.h>
 #include <netinet/in.h>
 
+static unsigned int _handle_new_frame(struct FramePool *, struct Packet *);
 
-void observe(struct Computer * listener, void (*recieved_message)(int)) {
-	
+
+
+void observe(struct Computer * listener, char * is_active, void (*recieved_message)(const char *, int)) {
+	struct ContentBuffer buffer;
 	struct FramePool pool;
 	init_pool(&pool); 
+	int complete_frame_index;
+	int frame_size;
 	
-	while (1) {
+	while (*is_active == 1) {
 		struct Packet from_packet;
 		struct Computer from_computer;
 		
 		_recieve_packet(&from_packet, listener, &from_computer);
-		switch (add_packet_to(&pool, &from_packet)) {
-				
-			case FRAME_FULL:
-				init_pool(&pool);
-				// TODO: - Recursivly add it in to stop wasting a frame
-				break;
-			case FRAME_INSERTED:
-				break;
-			case FRAME_COMPLETE:
-				// TODO: - figure out which frame is complete and complete
-				break;
+		if ((complete_frame_index = _handle_new_frame(&pool, &from_packet)) > 0) {
+			memset(buffer.data, 0, sizeof(buffer.data) / sizeof(char));
+			frame_size = 0;
+			for (unsigned int i = 0; i < pool.frames[complete_frame_index].recieved_packets; i ++) {
+				memmove(
+					&(buffer.data[pool.frames[complete_frame_index].packets[i].data_size * i]),
+					pool.frames[complete_frame_index].packets[i].transmitable_data.data,
+					pool.frames[complete_frame_index].packets[i].data_size
+				);
+				frame_size += pool.frames[complete_frame_index].packets[i].data_size;
+			}
+			recieved_message(buffer.data, frame_size);
 		}
 	}
-	
+}
+
+// Returns 0 if no action is required. Else it will the index of the packet to return
+static unsigned int _handle_new_frame(struct FramePool * pool, struct Packet * packet) {
+	int packet_index = add_packet_to(pool, packet);
+	switch (packet_index) {
+		case FRAME_FULL:
+			init_pool(pool);
+			return _handle_new_frame(pool, packet);
+		case FRAME_INSERTED:
+			return 0;
+		default:
+			return packet_index;
+	}
 }
 
 // TODO: - Error Handling

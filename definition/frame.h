@@ -15,26 +15,27 @@
 
 
 enum FrameInsertResponse {
-	FRAME_FULL,
-	FRAME_INSERTED,
-	FRAME_COMPLETE
+	FRAME_FULL = -2,
+	FRAME_INSERTED = -1,
+	FRAME_COMPLETE = 0
 };
 
 struct Frame {
 	struct Packet 	packets	[MAX_PACKETS_IN_FRAME];
-	int 			recieved_packets; // The number of packets that have been recieved.
-	int 			required_packets; // The number of packets required to fill the frame 100%
-	signed int		frame_id; //Want signed so -1 ccan be invalid. 
+	unsigned int 	recieved_packets; // The number of packets that have been recieved.
+	unsigned int 	required_packets; // The number of packets required to fill the frame 100%
+	signed int		frame_id; //Want signed so -1 ccan be invalid.
 };
 
 struct FramePool {
 	struct Frame	frames [FRAME_POOL_SIZE];
+	signed int		latest_complete_frame;
 };
 
 void init_pool(struct FramePool *);
 
 void init_frame(struct Frame *, struct Packet *);
 
-enum FrameInsertResponse add_packet_to(struct FramePool *, struct Packet *);
+signed int add_packet_to(struct FramePool *, struct Packet *);
 
 #endif /* frame_h */

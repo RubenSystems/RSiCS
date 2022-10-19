@@ -70,6 +70,14 @@
 
 
 /*
+
+	the maximum size of the unfragmented content that can be sent.
+ 
+ */
+#define MAX_CONTENT_SIZE PACKET_DATA_SIZE * MAX_PACKETS_IN_FRAME
+
+
+/*
 	frame pool is the maximum number of incomplete frames allowed 
  */
 #define FRAME_POOL_SIZE 5
