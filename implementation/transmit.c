@@ -52,7 +52,7 @@ enum TransmitResponse transmit(const char * text, unsigned int length, struct Co
 			{
 				.index = offset,
 				.uid = _get_next_id(),
-				.options = length - (offset * PACKET_DATA_SIZE) <= PACKET_DATA_SIZE ? 0b00000001 : 0b00000000,
+				.options = length - (offset * PACKET_DATA_SIZE) <= PACKET_DATA_SIZE ? 0b00000001 : 0b00000001,
 
 			},
 			.data_size = length - (offset * PACKET_DATA_SIZE)

@@ -12,14 +12,21 @@
 #include "definition/observe.h"
 
 
+void recieved_message(const char * message, int message_size) {
+	printf("recvd\n");
+}
+
 int main(int argc, const char * argv[]) {
 	// This is an example of how you set up a listener and start recieving packets on that listener
-	struct Computer * listener = create_listener("5253");
-	struct Computer recieved_from;
-	struct Packet recieved_packet;
-	recieve_packet(&recieved_packet, listener, &recieved_from);
-	printf("%s - ", recieved_packet.transmitable_data.data);
-	free(listener);
-	
+	struct Computer listener;
+	struct Computer from;
+	struct Packet pack;
+	create_listener("5253", &listener);
+//
+	char is_active = 1;
+//
+	observe(&listener, &is_active, recieved_message);
+//	_recieve_packet(&pack, &listener, &from);
+
 	return 0;
 }
