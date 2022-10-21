@@ -32,9 +32,11 @@
 */
 struct Packet {
 	struct {
-		PACKET_INDEX_SIZE 		index;
-		PACKET_ID_SIZE 			uid;
-		PACKET_OPTION_SIZE 		options;
+		struct {
+			PACKET_INDEX_SIZE 		index;
+			PACKET_ID_SIZE 			uid;
+			PACKET_OPTION_SIZE 		options;
+		} header;
 		char 					data		[PACKET_DATA_SIZE];
 	} transmitable_data;
 	int 						data_size;

@@ -30,10 +30,11 @@ static PACKET_ID_SIZE _get_next_id() {
 enum TransmitResponse ping(struct Computer * computer) {
 	struct Packet ping_packet = {
 		{
-			.index = 0,
-			.uid = _get_next_id(),
-			.options = 0b00000011,
-
+			{
+				.index = 0,
+				.uid = _get_next_id(),
+				.options = 0b00000011,
+			}
 		},
 		.data_size = 0
 	};
@@ -50,10 +51,11 @@ enum TransmitResponse transmit(const char * text, unsigned int length, struct Co
 		
 		struct Packet data_packet = {
 			{
-				.index = offset,
-				.uid = _get_next_id(),
-				.options = length - (offset * PACKET_DATA_SIZE) <= PACKET_DATA_SIZE ? 0b00000001 : 0b00000001,
-
+				{
+					.index = offset,
+					.uid = _get_next_id(),
+					.options = length - (offset * PACKET_DATA_SIZE) <= PACKET_DATA_SIZE ? 0b00000001 : 0b00000001,
+				}
 			},
 			.data_size = length - (offset * PACKET_DATA_SIZE)
 		};
