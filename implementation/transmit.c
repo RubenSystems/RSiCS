@@ -45,7 +45,6 @@ enum TransmitResponse ping(struct Computer * computer) {
 
 // TODO: - Error Handling
 enum TransmitResponse transmit(const char * text, unsigned int length, struct Computer * computer) {
-	
 	char success = 1;
 	struct Packet data_packet;
 	PACKET_ID_SIZE current_uid = _get_next_id();
@@ -67,6 +66,7 @@ enum TransmitResponse transmit(const char * text, unsigned int length, struct Co
 
 // MARK: - transmit_pakcet
 enum TransmitResponse _transmit_packet(struct Packet * packet, struct Computer * to_computer) {
+	printf("%s\n", packet->transmitable_data.data);
 	if (sendto(
 		to_computer->file_descriptor,
 		(void *)&((*packet).transmitable_data),

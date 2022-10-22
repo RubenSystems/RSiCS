@@ -15,7 +15,7 @@
 
 static unsigned int _handle_new_frame(struct FramePool *, struct Packet *);
 
-static void merge_frames_to_buffer(struct ContentBuffer *, int, int *, const struct FramePool *, void (*recieved_message)(const char *, int));
+static void merge_frames_to_buffer(struct ContentBuffer *, int, const struct FramePool *, void (*recieved_message)(const char *, int));
 
 
 
@@ -24,33 +24,32 @@ void observe(struct Computer * listener, char * is_active, void (*recieved_messa
 	struct FramePool pool;
 	init_pool(&pool); 
 	int complete_frame_index;
-	int frame_size;
 	while (*is_active == 1) {
 		struct Packet from_packet;
 		struct Computer from_computer;
 		_recieve_packet(&from_packet, listener, &from_computer);
 		if ((complete_frame_index = _handle_new_frame(&pool, &from_packet)) > 0) {
-			merge_frames_to_buffer(&buffer, complete_frame_index, &frame_size, &pool, recieved_message);
+			merge_frames_to_buffer(&buffer, complete_frame_index, &pool, recieved_message);
 		}
 	}
 }
 
 
-static void merge_frames_to_buffer(struct ContentBuffer *buffer, int complete_frame_index, int *frame_size, const struct FramePool *pool, void (*recieved_message)(const char *, int)) {
+static void merge_frames_to_buffer(struct ContentBuffer *buffer, int complete_frame_index, const struct FramePool *pool, void (*recieved_message)(const char *, int)) {
 	memset((void *)&(buffer->data), 0, sizeof(buffer->data) / sizeof(char));
-	*frame_size = 0;
+	int frame_size = 0;
 	for (unsigned int i = 0; i <= pool->frames[complete_frame_index].recieved_packets; i ++) {
 		struct Packet * packet = (void *)&(pool->frames[complete_frame_index].packets[i]);
-
+		printf("%i\n%s\n\n", packet->data_size * i, packet->transmitable_data.data);
 		memmove(
-				(void *)&(buffer->data[packet->data_size * i]),
+				(void *)&(buffer->data[frame_size]),
 				packet->transmitable_data.data,
 				packet->data_size
 		);
-		*frame_size += packet->data_size;
+		frame_size += packet->data_size;
 	}
-	buffer->data[*frame_size + 1] = 0;
-	recieved_message(buffer->data, *frame_size);
+	buffer->data[frame_size + 1] = 0;
+	recieved_message(buffer->data, frame_size + 1);
 }
 
 // Returns 0 if no action is required. Else it will the index of the packet to return
