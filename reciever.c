@@ -13,7 +13,7 @@
 
 
 void recieved_message(const char * message, int message_size) {
-	printf("-%s-\n", message);
+	printf("-%s-\n\n", message);
 }
 
 int main(int argc, const char * argv[]) {

@@ -17,6 +17,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include <math.h>
 
 // MARK: - fragment_into_packets
 static PACKET_ID_SIZE current_index = 0;
@@ -46,20 +47,15 @@ enum TransmitResponse ping(struct Computer * computer) {
 enum TransmitResponse transmit(const char * text, unsigned int length, struct Computer * computer) {
 	
 	char success = 1;
-	
-	for (int offset = 0; offset < length; offset += PACKET_DATA_SIZE) {
-		
-		struct Packet data_packet = {
-			{
-				{
-					.index = offset,
-					.uid = _get_next_id(),
-					.options = length - (offset * PACKET_DATA_SIZE) <= PACKET_DATA_SIZE ? 0b00000001 : 0b00000001,
-				}
-			},
-			.data_size = length - (offset * PACKET_DATA_SIZE)
-		};
-		memmove(data_packet.transmitable_data.data, text + (offset * PACKET_DATA_SIZE), PACKET_DATA_SIZE);
+	struct Packet data_packet;
+	PACKET_ID_SIZE current_uid = _get_next_id();
+	printf("uid: %i\n", current_uid);
+	for (int i = 0; i <= ceil( length / PACKET_DATA_SIZE ); i += 1) {
+		data_packet.transmitable_data.header.index = i;
+		data_packet.transmitable_data.header.uid = current_uid;
+		data_packet.transmitable_data.header.options = length - (i * PACKET_DATA_SIZE) <= PACKET_DATA_SIZE ? 0b00000001 : 0b00000000;
+		data_packet.data_size = (int)fmin(length - (i * PACKET_DATA_SIZE), PACKET_DATA_SIZE);
+		memmove(&(data_packet.transmitable_data.data), &text[i * PACKET_DATA_SIZE], (int)fmin(length - (i * PACKET_DATA_SIZE), PACKET_DATA_SIZE));
 		if (_transmit_packet(&data_packet, computer) == TRANSMIT_FAIL) {
 			success = 0;
 		};
@@ -72,12 +68,12 @@ enum TransmitResponse transmit(const char * text, unsigned int length, struct Co
 // MARK: - transmit_pakcet
 enum TransmitResponse _transmit_packet(struct Packet * packet, struct Computer * to_computer) {
 	if (sendto(
-	   to_computer->file_descriptor,
-	   (void *)&((*packet).transmitable_data),
-	   (sizeof(packet->transmitable_data) - PACKET_DATA_SIZE) + packet->data_size,
-	   0,
-	   (struct sockaddr *)&to_computer->socket_address,
-	   to_computer->socket_address_size
+		to_computer->file_descriptor,
+		(void *)&((*packet).transmitable_data),
+		sizeof(packet->transmitable_data.header) + packet->data_size,
+		0,
+		(struct sockaddr *)&to_computer->socket_address,
+		to_computer->socket_address_size
 	) == -1) {
 		return TRANSMIT_FAIL;
 	}
