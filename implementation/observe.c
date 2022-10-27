@@ -40,7 +40,6 @@ static void merge_frames_to_buffer(struct ContentBuffer *buffer, int complete_fr
 	int frame_size = 0;
 	for (unsigned int i = 0; i <= pool->frames[complete_frame_index].recieved_packets; i ++) {
 		struct Packet * packet = (void *)&(pool->frames[complete_frame_index].packets[i]);
-		printf("%i\n%s\n\n", packet->data_size * i, packet->transmitable_data.data);
 		memmove(
 				(void *)&(buffer->data[frame_size]),
 				packet->transmitable_data.data,

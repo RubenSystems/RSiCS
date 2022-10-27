@@ -85,4 +85,9 @@
 
 
 
+/*
+ The number of tasks that the dispatcher can do simultaniously.
+ */
+#define DISPATCHER_TASK_SIZE 10
+
 #endif /* config_h */
