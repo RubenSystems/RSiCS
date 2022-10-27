@@ -12,7 +12,7 @@
 #include "definition/observe.h"
 
 
-void recieved_message(const char * message, int message_size) {
+static void recieved_message(void *ctx, const char * message, int message_size) {
 	printf("-%s-\n\n", message);
 }
 
@@ -24,6 +24,7 @@ int main(int argc, const char * argv[]) {
 	create_listener("5253", &listener);
 //
 	char is_active = 1;
+	int context = 100;
 //
 	observe(&listener, &is_active, recieved_message);
 //	_recieve_packet(&pack, &listener, &from);

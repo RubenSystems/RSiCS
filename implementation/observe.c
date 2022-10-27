@@ -19,7 +19,7 @@ static void merge_frames_to_buffer(struct ContentBuffer *, int, const struct Fra
 
 
 
-void observe_width_context(struct Computer * listener, char * is_active, void * context, void (*recieved_message)(void *, const char *, int)) {
+void observe_with_context(struct Computer * listener, char * is_active, void * context, void (*recieved_message)(void *, const char *, int)) {
 	struct ContentBuffer buffer;
 	struct FramePool pool;
 	init_pool(&pool);
@@ -28,18 +28,24 @@ void observe_width_context(struct Computer * listener, char * is_active, void * 
 		struct Packet from_packet;
 		struct Computer from_computer;
 		_recieve_packet(&from_packet, listener, &from_computer);
+		
 		if ((complete_frame_index = _handle_new_frame(&pool, &from_packet)) > 0) {
-			merge_frames_to_buffer(&buffer, complete_frame_index, &pool, recieved_message, context);
+			merge_frames_to_buffer(&buffer, complete_frame_index, &pool, context, recieved_message);
 		}
 	}
 }
 
 void observe(struct Computer * listener, char * is_active, void (*recieved_message)(void *, const char *, int)) {
-	observe_width_context(listener, is_active, NULL, recieved_message);
+	observe_with_context(listener, is_active, NULL, recieved_message);
 }
 
 
-static void merge_frames_to_buffer(struct ContentBuffer *buffer, int complete_frame_index, const struct FramePool *pool, void * context, void (*recieved_message)(void *, const char *, int)) {
+static void merge_frames_to_buffer(struct ContentBuffer *buffer,
+								   int complete_frame_index,
+								   const struct FramePool *pool,
+								   void * context,
+								   void (*recieved_message)(void *, const char *, int)
+								) {
 	memset((void *)&(buffer->data), 0, sizeof(buffer->data) / sizeof(char));
 	int frame_size = 0;
 	for (unsigned int i = 0; i <= pool->frames[complete_frame_index].recieved_packets; i ++) {
