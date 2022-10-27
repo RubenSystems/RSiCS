@@ -50,7 +50,7 @@
 	The maximum transmission unit minus (ethernet, ip, udp, and checksum). Edit this if yours is smaller or bigger as RSiCS should handle
 	fragmentation, not the system. Size is in bytes.
 */
-#define MTU 1472
+#define MTU 1468
 
 /*
 	The amount of data that should be sent with the packet in bytes.
