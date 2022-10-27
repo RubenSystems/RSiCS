@@ -52,13 +52,7 @@ static struct QueueNode * _dequeue(struct DispatchQueue * queue) {
 	return NULL;
 }
 
-void async_task(struct DispatchQueue * queue, dispatcher_task task, void * arg) {
-	pthread_mutex_lock(&queue->mutex);
-	_enqueue(queue, task, arg);
-	pthread_mutex_unlock(&queue->mutex);
-}
-
-enum DequeueTaskStatus _dequeue_task(struct DispatchQueue * queue) {
+static enum DequeueTaskStatus _dequeue_task(struct DispatchQueue * queue) {
 	struct QueueNode * back = NULL;
 	pthread_mutex_lock(&queue->mutex);
 	if ((back = _dequeue(queue)) == NULL && queue->running == 1) {
@@ -86,10 +80,16 @@ static void * _thread_exe_function(void * data){
 	}
 	
 	while (_dequeue_task(queue) == DEQUEUE_EXECUTED) {
-		pthread_cond_signal(&queue->add_contition); 
+		pthread_cond_signal(&queue->add_contition);
 	}
 		
 	return NULL;
+}
+
+void async_task(struct DispatchQueue * queue, dispatcher_task task, void * arg) {
+	pthread_mutex_lock(&queue->mutex);
+	_enqueue(queue, task, arg);
+	pthread_mutex_unlock(&queue->mutex);
 }
 
 void start_execution(struct DispatchQueue * queue) {
