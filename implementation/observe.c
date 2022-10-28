@@ -15,11 +15,15 @@
 
 static unsigned int _handle_new_frame(struct FramePool *, struct Packet *);
 
-static void merge_frames_to_buffer(struct ContentBuffer *, int, const struct FramePool *, void *, void (*recieved_message)(void *, const char *, int));
+static void merge_frames_to_buffer(struct ContentBuffer *, int, const struct FramePool *, void *, struct Computer, void (*recieved_message)(void *, struct Computer, const char *, int));
 
 
 
+<<<<<<< HEAD
 void observe_with_context(struct Computer * listener, char * is_active, void * context, void (*recieved_message)(void *, const char *, int)) {
+=======
+void observe_width_context(struct Computer * listener, char * is_active, void * context, void (*recieved_message)(void *, struct Computer, const char *, int)) {
+>>>>>>> a87b79c6aa2cc3d7e36bea6c1667eb397956aa0f
 	struct ContentBuffer buffer;
 	struct FramePool pool;
 	init_pool(&pool);
@@ -30,11 +34,16 @@ void observe_with_context(struct Computer * listener, char * is_active, void * c
 		_recieve_packet(&from_packet, listener, &from_computer);
 		
 		if ((complete_frame_index = _handle_new_frame(&pool, &from_packet)) > 0) {
+<<<<<<< HEAD
 			merge_frames_to_buffer(&buffer, complete_frame_index, &pool, context, recieved_message);
+=======
+			merge_frames_to_buffer(&buffer, complete_frame_index, &pool, context, from_computer, recieved_message);
+>>>>>>> a87b79c6aa2cc3d7e36bea6c1667eb397956aa0f
 		}
 	}
 }
 
+<<<<<<< HEAD
 void observe(struct Computer * listener, char * is_active, void (*recieved_message)(void *, const char *, int)) {
 	observe_with_context(listener, is_active, NULL, recieved_message);
 }
@@ -46,6 +55,14 @@ static void merge_frames_to_buffer(struct ContentBuffer *buffer,
 								   void * context,
 								   void (*recieved_message)(void *, const char *, int)
 								) {
+=======
+void observe(struct Computer * listener, char * is_active, void (*recieved_message)(void *, struct Computer, const char *, int)) {
+	observe_width_context(listener, is_active, NULL, recieved_message);
+}
+
+
+static void merge_frames_to_buffer(struct ContentBuffer *buffer, int complete_frame_index, const struct FramePool *pool, void * context, struct Computer from_computer, void (*recieved_message)(void *, struct Computer from_computer, const char *, int)) {
+>>>>>>> a87b79c6aa2cc3d7e36bea6c1667eb397956aa0f
 	memset((void *)&(buffer->data), 0, sizeof(buffer->data) / sizeof(char));
 	int frame_size = 0;
 	for (unsigned int i = 0; i <= pool->frames[complete_frame_index].recieved_packets; i ++) {
@@ -58,7 +75,7 @@ static void merge_frames_to_buffer(struct ContentBuffer *buffer,
 		frame_size += packet->data_size;
 	}
 	buffer->data[frame_size + 1] = 0;
-	recieved_message(context, buffer->data, frame_size + 1);
+	recieved_message(context, from_computer, buffer->data, frame_size + 1);
 }
 
 // Returns 0 if no action is required. Else it will the index of the packet to return
