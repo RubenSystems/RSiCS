@@ -1,5 +1,7 @@
 # Stop experimental files
 main.c
+transmitter.c
+reciever.c
 
 # Stop builds etc
 bin/
