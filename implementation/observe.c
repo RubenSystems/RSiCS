@@ -72,7 +72,7 @@ static unsigned int _handle_new_frame(struct FramePool * pool, struct Packet * p
 
 enum ObserveResponse _recieve_packet(struct Packet * packet, struct Computer * recieve_listener, struct Computer * from_computer) {
 	struct sockaddr_storage storage;
-	socklen_t storage_size = sizeof(storage);
+	socklen_t storage_size = sizeof(struct sockaddr_storage);
 	int data_size;
 	if ((data_size = (int)recvfrom(
 		recieve_listener->file_descriptor,
@@ -87,6 +87,8 @@ enum ObserveResponse _recieve_packet(struct Packet * packet, struct Computer * r
 	
 	packet->data_size = data_size - sizeof(packet->transmitable_data.header);
 	from_computer->file_descriptor = recieve_listener->file_descriptor;
+	from_computer->socket_address = *(struct sockaddr *)&storage;
+	from_computer->socket_address_size = storage.ss_len;
 	
 	return ((packet->transmitable_data.header.options & 0b00000010) == 0b00000010) ? OBSERVE_PONG : OBSERVE_DATA;
 }

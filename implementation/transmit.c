@@ -48,7 +48,6 @@ enum TransmitResponse transmit(const char * text, unsigned int length, struct Co
 	char success = 1;
 	struct Packet data_packet;
 	PACKET_ID_SIZE current_uid = _get_next_id();
-	printf("uid: %i\n", current_uid);
 	for (int i = 0; i <= ceil( length / PACKET_DATA_SIZE ); i += 1) {
 		data_packet.transmitable_data.header.index = i;
 		data_packet.transmitable_data.header.uid = current_uid;
@@ -66,7 +65,6 @@ enum TransmitResponse transmit(const char * text, unsigned int length, struct Co
 
 // MARK: - transmit_pakcet
 enum TransmitResponse _transmit_packet(struct Packet * packet, struct Computer * to_computer) {
-	printf("%s\n", packet->transmitable_data.data);
 	if (sendto(
 		to_computer->file_descriptor,
 		(void *)&((*packet).transmitable_data),
