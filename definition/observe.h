@@ -20,7 +20,7 @@ enum ObserveResponse {
 
 // Attach event listener
 
-void observe_width_context(struct Computer *, char *, void *, void (*recieved_message)(void *, struct Computer, const char *, int));
+void observe_with_context(struct Computer *, char *, void *, void (*recieved_message)(void *, struct Computer, const char *, int));
 
 void observe(struct Computer *, char *, void (*recieved_message)(void *, struct Computer, const char *, int));
 

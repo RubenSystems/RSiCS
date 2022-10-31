@@ -18,7 +18,7 @@ static unsigned int _handle_new_frame(struct FramePool *, struct Packet *);
 static void merge_frames_to_buffer(struct ContentBuffer *, int, const struct FramePool *, void *, struct Computer, void (*recieved_message)(void *, struct Computer, const char *, int));
 
 
-void observe_width_context(struct Computer * listener, char * is_active, void * context, void (*recieved_message)(void *, struct Computer, const char *, int)) {
+void observe_with_context(struct Computer * listener, char * is_active, void * context, void (*recieved_message)(void *, struct Computer, const char *, int)) {
 	struct ContentBuffer buffer;
 	struct FramePool pool;
 	init_pool(&pool);
@@ -36,7 +36,7 @@ void observe_width_context(struct Computer * listener, char * is_active, void * 
 
 
 void observe(struct Computer * listener, char * is_active, void (*recieved_message)(void *, struct Computer, const char *, int)) {
-	observe_width_context(listener, is_active, NULL, recieved_message);
+	observe_with_context(listener, is_active, NULL, recieved_message);
 }
 
 
