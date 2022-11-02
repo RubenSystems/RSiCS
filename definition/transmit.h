@@ -20,6 +20,6 @@ enum TransmitResponse ping(struct Computer *);
 
 enum TransmitResponse transmit(const char *, unsigned int, struct Computer *);
 
-enum TransmitResponse _transmit_packet(struct Packet *, struct Computer *);
+enum TransmitResponse transmit_packet(struct Packet *, struct Computer *);
 
 #endif /* transmit_h */

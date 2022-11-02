@@ -64,7 +64,7 @@ enum TransmitResponse transmit(const char * text, unsigned int length, struct Co
 
 
 // MARK: - transmit_pakcet
-enum TransmitResponse _transmit_packet(struct Packet * packet, struct Computer * to_computer) {
+enum TransmitResponse transmit_packet(struct Packet * packet, struct Computer * to_computer) {
 	if (sendto(
 		to_computer->file_descriptor,
 		(void *)&((*packet).transmitable_data),
