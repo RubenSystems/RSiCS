@@ -39,7 +39,7 @@ enum TransmitResponse ping(struct Computer * computer) {
 		},
 		.data_size = 0
 	};
-	return _transmit_packet(&ping_packet, computer);
+	return transmit_packet(&ping_packet, computer);
 }
 
 
@@ -54,7 +54,7 @@ enum TransmitResponse transmit(const char * text, unsigned int length, struct Co
 		data_packet.transmitable_data.header.options = length - (i * PACKET_DATA_SIZE) <= PACKET_DATA_SIZE ? 0b00000001 : 0b00000000;
 		data_packet.data_size = (int)fmin(length - (i * PACKET_DATA_SIZE), PACKET_DATA_SIZE);
 		memmove(&(data_packet.transmitable_data.data), &text[i * PACKET_DATA_SIZE], (int)fmin(length - (i * PACKET_DATA_SIZE), PACKET_DATA_SIZE));
-		if (_transmit_packet(&data_packet, computer) == TRANSMIT_FAIL) {
+		if (transmit_packet(&data_packet, computer) == TRANSMIT_FAIL) {
 			success = 0;
 		};
 	}
