@@ -18,20 +18,21 @@ static unsigned int _handle_new_frame(struct FramePool *, struct Packet *);
 static void merge_frames_to_buffer(struct ContentBuffer *, int, const struct FramePool *, const void *, struct Computer, void (*recieved_message)(const void *, struct Computer, const char *, int));
 
 
-void observe_with_context(struct Computer * listener, char * is_active, const  void * context, void (*recieved_message)(const void *, struct Computer, const char *, int)) {
+void observe_with_context(struct Computer * listener, char * is_active, const void * context, void (*recieved_message)(const void *, struct Computer, const char *, int)) {
 	struct ContentBuffer buffer;
-	struct FramePool pool;
-	init_pool(&pool);
+	struct FramePool * pool = malloc(sizeof(struct FramePool));
+	init_pool(pool);
 	int complete_frame_index;
 	while (*is_active == 1) {
 		struct Packet from_packet;
 		struct Computer from_computer;
 		_recieve_packet(&from_packet, listener, &from_computer);
 		
-		if ((complete_frame_index = _handle_new_frame(&pool, &from_packet)) > 0) {
-			merge_frames_to_buffer(&buffer, complete_frame_index, &pool, context, from_computer, recieved_message);
+		if ((complete_frame_index = _handle_new_frame(pool, &from_packet)) > 0) {
+			merge_frames_to_buffer(&buffer, complete_frame_index, pool, context, from_computer, recieved_message);
 		}
 	}
+	free(pool);
 }
 
 

@@ -27,19 +27,19 @@ void start_execution(struct DispatchQueue *);
 void join(struct DispatchQueue *);
 
 struct QueueNode {
-	dispatcher_task task;
-	void * arg;
-	struct QueueNode * next;
+	dispatcher_task		task;
+	void * 				arg;
+	struct QueueNode * 	next;
 	
 };
 
 struct DispatchQueue {
-	struct QueueNode * begin;
-	struct QueueNode * end;
-	char running; // shutdown the queue
-	pthread_mutex_t mutex;
-	pthread_cond_t add_contition; // condition for waiting on add
-	pthread_t threads [DISPATCHER_TASK_SIZE];
+	struct QueueNode * 	begin;
+	struct QueueNode * 	end;
+	char 				running; // shutdown the queue
+	pthread_mutex_t 	mutex;
+	pthread_cond_t 		add_contition; // condition for waiting on add
+	pthread_t 			threads [DISPATCHER_TASK_SIZE];
 };
 
 

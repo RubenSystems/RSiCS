@@ -11,7 +11,6 @@
 #include "../config.h"
 #include "models.h"
 
-#include <stdio.h>
 
 
 enum FrameInsertResponse {
@@ -23,7 +22,7 @@ enum FrameInsertResponse {
 struct Frame {
 	struct Packet 	packets	[MAX_PACKETS_IN_FRAME];
 	unsigned int 	recieved_packets; // The number of packets that have been recieved.
-	signed int 	required_packets; // The number of packets required to fill the frame 100%, -1 if not known 
+	signed int 		required_packets; // The number of packets required to fill the frame 100%, -1 if not known 
 	signed int		frame_id; //Want signed so -1 ccan be invalid.
 };
 
