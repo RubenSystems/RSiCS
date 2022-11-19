@@ -1,2 +1,2 @@
 # RSiCS
-The next generation internet communications system 
+Generic Realtime Internet Communications
