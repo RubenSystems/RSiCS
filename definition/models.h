@@ -12,7 +12,6 @@
 
 #include <sys/socket.h>
 
-
 /*
 	MARK: - Packet
 	Several packets make a frame.
@@ -39,7 +38,7 @@ struct Packet {
 		} header;
 		char 					data		[PACKET_DATA_SIZE];
 	} transmitable_data;
-	int 						data_size;
+	uint32_t 						data_size;
 };
 
 

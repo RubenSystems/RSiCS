@@ -15,10 +15,10 @@
 
 static unsigned int _handle_new_frame(struct FramePool *, struct Packet *);
 
-static void merge_frames_to_buffer(struct ContentBuffer *, int, const struct FramePool *, const void *, struct Computer, void (*recieved_message)(const void *, struct Computer, const char *, int));
+static void merge_frames_to_buffer(struct ContentBuffer *, int, const struct FramePool *, const void *, struct Computer, void (*recieved_message)(const void *, struct Computer, void *, int));
 
 
-void observe_with_context(struct Computer * listener, char * is_active, const void * context, void (*recieved_message)(const void *, struct Computer, const char *, int)) {
+void observe_with_context(struct Computer * listener, char * is_active, const void * context, void (*recieved_message)(const void *, struct Computer, void *, int)) {
 	struct ContentBuffer buffer;
 	struct FramePool * pool = malloc(sizeof(struct FramePool));
 	init_pool(pool);
@@ -36,12 +36,12 @@ void observe_with_context(struct Computer * listener, char * is_active, const vo
 }
 
 
-void observe(struct Computer * listener, char * is_active, void (*recieved_message)(const void *, struct Computer, const char *, int)) {
+void observe(struct Computer * listener, char * is_active, void (*recieved_message)(const void *, struct Computer, void *, int)) {
 	observe_with_context(listener, is_active, NULL, recieved_message);
 }
 
 
-static void merge_frames_to_buffer(struct ContentBuffer *buffer, int complete_frame_index, const struct FramePool *pool, const void * context, struct Computer from_computer, void (*recieved_message)(const void *, struct Computer from_computer, const char *, int)) {
+static void merge_frames_to_buffer(struct ContentBuffer *buffer, int complete_frame_index, const struct FramePool *pool, const void * context, struct Computer from_computer, void (*recieved_message)(const void *, struct Computer from_computer, void *, int)) {
 	memset((void *)&(buffer->data), 0, sizeof(buffer->data) / sizeof(char));
 	int frame_size = 0;
 	for (unsigned int i = 0; i <= pool->frames[complete_frame_index].recieved_packets; i ++) {

@@ -18,7 +18,7 @@ enum TransmitResponse {
 
 enum TransmitResponse ping(struct Computer *);
 
-enum TransmitResponse transmit(const char *, unsigned int, struct Computer *);
+enum TransmitResponse transmit(void *, unsigned int, struct Computer *);
 
 enum TransmitResponse transmit_packet(struct Packet *, struct Computer *);
 

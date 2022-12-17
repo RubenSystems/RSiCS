@@ -44,7 +44,7 @@ enum TransmitResponse ping(struct Computer * computer) {
 
 
 // TODO: - Error Handling
-enum TransmitResponse transmit(const char * text, unsigned int length, struct Computer * computer) {
+enum TransmitResponse transmit(void * text, unsigned int length, struct Computer * computer) {
 	char success = 1;
 	struct Packet data_packet;
 	PACKET_ID_SIZE current_uid = _get_next_id();
