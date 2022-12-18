@@ -39,8 +39,8 @@ struct Packet {
 		char 					data		[PACKET_DATA_SIZE];
 	} transmitable_data;
 	uint32_t 						data_size;
+	
 };
-
 
 
 struct Computer {
@@ -62,7 +62,7 @@ enum AttachmentResponse create_computer(const char *, const char *, struct Compu
 
 enum AttachmentResponse create_listener(const char *, struct Computer *);
 
-
-
+// Helper functions
+char sockaddr_cmp(struct sockaddr, struct sockaddr);
 
 #endif /* models_h */

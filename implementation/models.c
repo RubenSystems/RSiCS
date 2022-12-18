@@ -88,3 +88,7 @@ enum AttachmentResponse create_listener(const char * port, struct Computer * com
 
 	return ATTACH_SUCCESS;
 }
+
+char sockaddr_cmp(struct sockaddr a, struct sockaddr b) {
+	return strcmp(a.sa_data, b.sa_data) == 0;
+}
