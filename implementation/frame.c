@@ -31,17 +31,20 @@ static int move_packet_to_frame(struct Packet *packet, struct Frame * frame) {
 	return cond ? FRAME_INSERTED : FRAME_COMPLETE;
 }
 
+
 signed int add_packet_to(struct FramePool * pool, struct Packet * packet) {
 	signed int last_available_slot = -1;
-	for (unsigned int i = 0; i < sizeof(pool->frames) / sizeof(struct Frame); i ++) {
-		if (pool->frames[i].frame_id == packet->transmitable_data.header.uid) {
-			int mv = move_packet_to_frame(packet, &(pool->frames[i])) ;
-			return mv == FRAME_COMPLETE ? i : FRAME_INSERTED;
-		} else if (pool->frames[i].frame_id == -1) {
-			last_available_slot = i;
+	for (unsigned int frame_index = 0; frame_index < sizeof(pool->frames) / sizeof(struct Frame); frame_index ++) {
+		if (pool->frames[frame_index].frame_id == packet->transmitable_data.header.uid) {
+			int mv = move_packet_to_frame(packet, &(pool->frames[frame_index])) ;
+			return mv == FRAME_COMPLETE ? frame_index : FRAME_INSERTED;
+		} else if (pool->frames[frame_index].frame_id == -1) {
+			last_available_slot = frame_index;
 		}
 	}
 	
+	
+	// Could not find a frame to insert into, either the pool is full or it is a new packet which needs to be initalised.
 	if (last_available_slot == -1) {
 		return FRAME_FULL;
 	}

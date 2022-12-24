@@ -13,7 +13,7 @@
 #include <string.h>
 #include <netinet/in.h>
 
-static unsigned int _handle_new_frame(struct FramePool *, struct Packet *);
+static signed int _handle_new_frame(struct FramePool *, struct Packet *);
 
 static void merge_frames_to_buffer(struct ContentBuffer *, int, const struct FramePool *, const void *, struct Computer, void (*recieved_message)(const void *, struct Computer, void *, int));
 
@@ -28,7 +28,7 @@ void observe_with_context(struct Computer * listener, char * is_active, const vo
 		struct Computer from_computer;
 		_recieve_packet(&from_packet, listener, &from_computer);
 		
-		if ((complete_frame_index = _handle_new_frame(pool, &from_packet)) > 0) {
+		if ((complete_frame_index = _handle_new_frame(pool, &from_packet)) >= 0) {
 			merge_frames_to_buffer(&buffer, complete_frame_index, pool, context, from_computer, recieved_message);
 		}
 	}
@@ -58,14 +58,14 @@ static void merge_frames_to_buffer(struct ContentBuffer *buffer, int complete_fr
 }
 
 // Returns 0 if no action is required. Else it will the index of the packet to return
-static unsigned int _handle_new_frame(struct FramePool * pool, struct Packet * packet) {
+static signed int _handle_new_frame(struct FramePool * pool, struct Packet * packet) {
 	int packet_index = add_packet_to(pool, packet);
 	switch (packet_index) {
 		case FRAME_FULL:
 			init_pool(pool);
 			return _handle_new_frame(pool, packet);
 		case FRAME_INSERTED:
-			return 0;
+			return -1;
 		default:
 			return packet_index;
 	}

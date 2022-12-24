@@ -14,9 +14,9 @@
 
 
 enum FrameInsertResponse {
-	FRAME_FULL = -2,
-	FRAME_INSERTED = -1,
-	FRAME_COMPLETE = 0
+	FRAME_FULL = -3,
+	FRAME_INSERTED = -2,
+	FRAME_COMPLETE = -1
 };
 
 struct Frame {
