@@ -89,7 +89,7 @@ enum ObserveResponse _recieve_packet(struct Packet * packet, struct Computer * r
 	packet->data_size = data_size - sizeof(packet->transmitable_data.header);
 	from_computer->file_descriptor = recieve_listener->file_descriptor;
 	from_computer->socket_address = *(struct sockaddr *)&storage;
-	from_computer->socket_address_size = storage.ss_len;
+	from_computer->socket_address_size = from_computer->socket_address.sa_len;
 	
 	return ((packet->transmitable_data.header.options & 0b00000010) == 0b00000010) ? OBSERVE_PONG : OBSERVE_DATA;
 }
