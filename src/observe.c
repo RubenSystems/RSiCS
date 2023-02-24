@@ -13,9 +13,10 @@
 #include <string.h>
 #include <netinet/in.h>
 
+
 static signed int _handle_new_frame(struct FramePool *, struct Packet *);
 
-static void merge_frames_to_buffer(struct ContentBuffer *, int, const struct FramePool *, const void *, struct Computer, void (*recieved_message)(const void *, struct Computer, void *, int));
+static void merge_frames_to_buffer(struct ContentBuffer *, int, const struct FramePool *, const void *, struct Computer, message_callback);
 
 static uint8_t __get_sa_len(struct sockaddr * address) {
 	switch (address->sa_family) {
@@ -27,7 +28,7 @@ static uint8_t __get_sa_len(struct sockaddr * address) {
 	return 0;
 }
 
-void observe_with_context(struct Computer * listener, char * is_active, const void * context, void (*recieved_message)(const void *, struct Computer, void *, int)) {
+void observe_with_context(struct Computer * listener, char * is_active, const void * context, message_callback recieved_message) {
 	struct ContentBuffer buffer;
 	struct FramePool * pool = malloc(sizeof(struct FramePool));
 	init_pool(pool);
@@ -45,12 +46,12 @@ void observe_with_context(struct Computer * listener, char * is_active, const vo
 }
 
 
-void observe(struct Computer * listener, char * is_active, void (*recieved_message)(const void *, struct Computer, void *, int)) {
-	observe_with_context(listener, is_active, NULL, recieved_message);
+void observe(struct Computer * listener, char * is_active, message_callback callback) {
+	observe_with_context(listener, is_active, NULL, callback);
 }
 
 
-static void merge_frames_to_buffer(struct ContentBuffer *buffer, int complete_frame_index, const struct FramePool *pool, const void * context, struct Computer from_computer, void (*recieved_message)(const void *, struct Computer from_computer, void *, int)) {
+static void merge_frames_to_buffer(struct ContentBuffer *buffer, int complete_frame_index, const struct FramePool *pool, const void * context, struct Computer from_computer, message_callback recieved_message) {
 	memset((void *)&(buffer->data), 0, sizeof(buffer->data) / sizeof(char));
 	int frame_size = 0;
 	for (unsigned int i = 0; i <= pool->frames[complete_frame_index].recieved_packets; i ++) {
@@ -63,7 +64,7 @@ static void merge_frames_to_buffer(struct ContentBuffer *buffer, int complete_fr
 		frame_size += packet->data_size;
 	}
 	buffer->data[frame_size + 1] = 0;
-	recieved_message(context, from_computer, buffer->data, frame_size + 1);
+	recieved_message(context, &from_computer, buffer->data, frame_size + 1);
 }
 
 // Returns 0 if no action is required. Else it will the index of the packet to return

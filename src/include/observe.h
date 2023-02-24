@@ -17,12 +17,13 @@ enum ObserveResponse {
 	OBSERVE_DATA
 };
 
+typedef void (*message_callback)(const void *, struct Computer *, void *, int);
 
 // Attach event listener
 
-void observe_with_context(struct Computer *, char *, const void *, void (*recieved_message)(const void *, struct Computer, void *, int));
+void observe_with_context(struct Computer *, char *, const void *, message_callback);
 
-void observe(struct Computer *, char *, void (*recieved_message)(const void *, struct Computer, void *, int));
+void observe(struct Computer *, char *, message_callback);
 
 enum ObserveResponse _recieve_packet(struct Packet *, struct Computer *, struct Computer *);
 
