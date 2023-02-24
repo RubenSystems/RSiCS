@@ -8,7 +8,7 @@
 #ifndef models_h
 #define models_h
 
-#include "../config.h"
+#include "config.h"
 
 #include <sys/socket.h>
 

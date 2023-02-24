@@ -5,7 +5,7 @@
 //  Created by Ruben Ticehurst-James on 22/10/2022.
 //
 
-#include "../definition/dispatcher.h"
+#include "include/dispatcher.h"
 #include <stdlib.h>
 
 

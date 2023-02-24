@@ -12,7 +12,7 @@
 #include <pthread.h>
 
 
-#include "../config.h"
+#include "config.h"
 
 
 typedef void * (*dispatcher_task)(void *);

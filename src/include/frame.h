@@ -8,7 +8,7 @@
 #ifndef frame_h
 #define frame_h
 
-#include "../config.h"
+#include "config.h"
 #include "models.h"
 
 

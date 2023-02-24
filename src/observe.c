@@ -5,8 +5,8 @@
 //  Created by Ruben Ticehurst-James on 06/10/2022.
 //
 
-#include "../definition/observe.h"
-#include "../definition/frame.h"
+#include "include/observe.h"
+#include "include/frame.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,6 +17,15 @@ static signed int _handle_new_frame(struct FramePool *, struct Packet *);
 
 static void merge_frames_to_buffer(struct ContentBuffer *, int, const struct FramePool *, const void *, struct Computer, void (*recieved_message)(const void *, struct Computer, void *, int));
 
+static uint8_t __get_sa_len(struct sockaddr * address) {
+	switch (address->sa_family) {
+		case AF_INET:
+			return sizeof(struct sockaddr_in);
+		case AF_INET6:
+			return sizeof(struct sockaddr_in6);
+	}
+	return 0;
+}
 
 void observe_with_context(struct Computer * listener, char * is_active, const void * context, void (*recieved_message)(const void *, struct Computer, void *, int)) {
 	struct ContentBuffer buffer;
@@ -89,7 +98,7 @@ enum ObserveResponse _recieve_packet(struct Packet * packet, struct Computer * r
 	packet->data_size = data_size - sizeof(packet->transmitable_data.header);
 	from_computer->file_descriptor = recieve_listener->file_descriptor;
 	from_computer->socket_address = *(struct sockaddr *)&storage;
-	from_computer->socket_address_size = from_computer->socket_address.sa_len;
+	from_computer->socket_address_size = __get_sa_len(&from_computer->socket_address);
 	
 	return ((packet->transmitable_data.header.options & 0b00000010) == 0b00000010) ? OBSERVE_PONG : OBSERVE_DATA;
 }

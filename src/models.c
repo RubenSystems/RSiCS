@@ -5,7 +5,7 @@
 //  Created by Ruben Ticehurst-James on 06/10/2022.
 //
 
-#include "../definition/models.h"
+#include "include/models.h"
 
 #include <netdb.h>
 #include <stdlib.h>
