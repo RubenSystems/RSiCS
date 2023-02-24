@@ -58,6 +58,12 @@ enum AttachmentResponse {
 	ATTACH_SUCCESS
 };
 
+struct Computer * create_empty_computer(void);
+
+void free_computer(struct Computer *);
+
+
+
 enum AttachmentResponse create_computer(const char *, const char *, struct Computer *);
 
 enum AttachmentResponse create_listener(const char *, struct Computer *);

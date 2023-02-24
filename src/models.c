@@ -13,7 +13,13 @@
 #include <string.h>
 #include <unistd.h>
 
+struct Computer * create_empty_computer() {
+	return malloc(sizeof(struct Computer));
+}
 
+void free_computer(struct Computer * computer) {
+	free(computer);
+}
 
 enum AttachmentResponse create_computer(const char * ip, const char * port, struct Computer * computer) {
 	int fd = 0, rv;
