@@ -1,5 +1,5 @@
 reciever: 
-	gcc reciever.c -o reciever implementation/observe.c implementation/models.c implementation/frame.c
+	gcc rsics_build.so -shared -o reciever src/observe.c src/models.c src/frame.c
 
 clean:
-	rm reciever transmitter
+	rm 
