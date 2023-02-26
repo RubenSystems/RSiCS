@@ -53,7 +53,8 @@ enum TransmitResponse transmit(void * text, unsigned int length, struct Computer
 		data_packet.transmitable_data.header.uid = current_uid;
 		data_packet.transmitable_data.header.options = length - (i * PACKET_DATA_SIZE) <= PACKET_DATA_SIZE ? 0b00000001 : 0b00000000;
 		data_packet.data_size = (int)fmin(length - (i * PACKET_DATA_SIZE), PACKET_DATA_SIZE);
-		memmove(&(data_packet.transmitable_data.data), &text[i * PACKET_DATA_SIZE], (int)fmin(length - (i * PACKET_DATA_SIZE), PACKET_DATA_SIZE));
+		
+		memmove(&(data_packet.transmitable_data.data), &(text[i * PACKET_DATA_SIZE]), (int)fmin(length - (i * PACKET_DATA_SIZE), PACKET_DATA_SIZE));
 		if (transmit_packet(&data_packet, computer) == TRANSMIT_FAIL) {
 			success = 0;
 		};
