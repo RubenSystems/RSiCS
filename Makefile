@@ -1,5 +1,16 @@
-reciever: 
-	gcc -O3 -shared -o rsics_build.so src/observe.c src/models.c src/frame.c src/transmit.c
+CC = gcc
+SRCS = $(shell find ./src -name "*.c")
+OBJS = $(patsubst %.c, %.o, $(SRCS))
+TARGET = librsics.so
+FLAGS = -O3 -shared
 
-clean:
-	rm rsics_build.so 
+all: main
+
+main: $(OBJS)
+	$(CC) $(FLAGS) -o $(TARGET) $(OBJS)
+
+%.o: %.cpp
+	$(CC) $(FLAGS) -c $< -o $@
+
+clean: 
+	rm  $(TARGET) $(OBJS)
