@@ -68,7 +68,7 @@
  
  */
 
-#define MAX_PACKETS_IN_FRAME 70
+#define MAX_PACKETS_IN_FRAME 150
 
 
 /*

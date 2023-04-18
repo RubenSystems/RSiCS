@@ -23,11 +23,12 @@ void init_frame(struct Frame * frame, struct Packet * first_packet) {
 static int move_packet_to_frame(struct Packet *packet, struct Frame * frame) {
 	frame->packets[packet->transmitable_data.header.index] = *packet;
 	
-	if ((packet->transmitable_data.header.options & 0b00000001) == 0b00000001) { // Completion check
+	if ((packet->transmitable_data.header.options & 0b00000001) != 0) { // Completion check
 		frame->required_packets = packet->transmitable_data.header.index;
 	}
 	char cond = (frame->required_packets + 1 < ++frame->recieved_packets);
-	frame->frame_id = -1; 
+//	if (cond)
+//		frame->frame_id = -1;
 	return cond ? FRAME_INSERTED : FRAME_COMPLETE;
 }
 

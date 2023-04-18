@@ -41,6 +41,7 @@ void observe_with_context(struct Computer * listener, char * is_active, const vo
 		if ((complete_frame_index = _handle_new_frame(pool, &from_packet)) >= 0) {
 			merge_frames_to_buffer(&buffer, complete_frame_index, pool, context, from_computer, recieved_message);
 		}
+		
 	}
 	free(pool);
 }
@@ -51,9 +52,17 @@ void observe(struct Computer * listener, char * is_active, message_callback call
 }
 
 
-static void merge_frames_to_buffer(struct ContentBuffer *buffer, int complete_frame_index, const struct FramePool *pool, const void * context, struct Computer from_computer, message_callback recieved_message) {
+static void merge_frames_to_buffer(
+								   struct ContentBuffer *buffer,
+								   int complete_frame_index,
+								   const struct FramePool *pool,
+								   const void * context,
+								   struct Computer from_computer,
+								   message_callback recieved_message
+								) {
 	memset((void *)&(buffer->data), 0, sizeof(buffer->data) / sizeof(char));
 	int frame_size = 0;
+	printf("%i %i\n", pool->frames[complete_frame_index].required_packets, pool->frames[complete_frame_index].recieved_packets);
 	for (unsigned int i = 0; i <= pool->frames[complete_frame_index].recieved_packets; i ++) {
 		struct Packet * packet = (void *)&(pool->frames[complete_frame_index].packets[i]);
 		memmove(
@@ -95,12 +104,10 @@ enum ObserveResponse _recieve_packet(struct Packet * packet, struct Computer * r
 	)) == -1) {
 		return OBSERVE_FAIL;
 	}
-	
 	packet->data_size = data_size - sizeof(packet->transmitable_data.header);
 	from_computer->file_descriptor = recieve_listener->file_descriptor;
 	from_computer->socket_address = *(struct sockaddr *)&storage;
 	from_computer->socket_address_size = __get_sa_len(&from_computer->socket_address);
-	
 	return ((packet->transmitable_data.header.options & 0b00000010) == 0b00000010) ? OBSERVE_PONG : OBSERVE_DATA;
 }
 
