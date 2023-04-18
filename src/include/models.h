@@ -12,6 +12,10 @@
 
 #include <sys/socket.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
 	MARK: - Packet
 	Several packets make a frame.
@@ -70,5 +74,9 @@ enum AttachmentResponse create_listener(const char *, struct Computer *);
 
 // Helper functions
 char sockaddr_cmp(struct sockaddr, struct sockaddr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* models_h */

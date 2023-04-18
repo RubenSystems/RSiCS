@@ -10,6 +10,9 @@
 
 #include "models.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 enum ObserveResponse {
 	OBSERVE_FAIL,
@@ -26,5 +29,9 @@ void observe_with_context(struct Computer *, char *, const void *, message_callb
 void observe(struct Computer *, char *, message_callback);
 
 enum ObserveResponse _recieve_packet(struct Packet *, struct Computer *, struct Computer *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* observe_h */

@@ -12,6 +12,10 @@
 #include "models.h"
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 enum FrameInsertResponse {
 	FRAME_FULL = -3,
@@ -31,10 +35,15 @@ struct FramePool {
 	signed int		latest_complete_frame;
 };
 
+
 void init_pool(struct FramePool *);
 
 void init_frame(struct Frame *, struct Packet *);
 
 signed int add_packet_to(struct FramePool *, struct Packet *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* frame_h */

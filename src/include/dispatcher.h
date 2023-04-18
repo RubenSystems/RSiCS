@@ -52,6 +52,4 @@ enum DequeueTaskStatus {
 };
 
 
-
-
 #endif /* dispatcher_h */
