@@ -11,7 +11,6 @@
 #include <limits.h>
 #include <stdint.h>
 
-
 #define PACKET_INDEX_SIZE uint16_t
 
 #define PACKET_ID_SIZE uint8_t
@@ -23,7 +22,5 @@
 #define MAX_PACKETS_IN_BUFFER 70
 
 #define BUFFER_POOL_SIZE 5
-
-
 
 #endif /* config_h */
