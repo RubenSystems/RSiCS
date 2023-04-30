@@ -20,9 +20,9 @@
 
 #define MTU 1468
 
-#define MAX_PACKETS_IN_FRAME 70
+#define MAX_PACKETS_IN_BUFFER 70
 
-#define FRAME_POOL_SIZE 5
+#define BUFFER_POOL_SIZE 5
 
 
 
