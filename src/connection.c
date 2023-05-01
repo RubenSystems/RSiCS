@@ -46,8 +46,8 @@ enum create_listener_response rsics_connect(const char * ip, const char * port,
 	return CREATE_LISTENER_SUCCEED;
 }
 
-enum create_listener_response rsics_listen(const char * port,
-					   struct connection * computer) {
+enum create_listener_response
+rsics_make_listener(const char * port, struct connection * computer) {
 	int fd = 0, rv;
 	struct addrinfo *server_info, *p, hints;
 	memset(&hints, 0, sizeof hints);

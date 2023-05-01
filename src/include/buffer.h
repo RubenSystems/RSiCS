@@ -23,6 +23,8 @@ struct buffer {
 		uint32_t recieved_packets;
 		int32_t required_packets;
 		int32_t frame_id;
+		uint64_t data_count;
+		bool read_available;
 		pthread_mutex_t mutex;
 	} metadata;
 

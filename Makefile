@@ -13,6 +13,8 @@ main: $(OBJS)
 %.o: %.c
 	$(CC) $(FLAGS) -c $< -o $@
 
+format:
+	clang-format -i -style="file:clang-format.txt" src/*.c src/include/*.h
 
 clean: 
 	rm  $(TARGET) $(OBJS)

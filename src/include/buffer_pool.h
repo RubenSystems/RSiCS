@@ -23,7 +23,7 @@ void rsics_init_pool(struct buffer_pool *);
 
 void rsics_close_pool(struct buffer_pool *);
 
-uint16_t rsics_add_packet(struct buffer_pool *);
+int16_t rsics_pool_add_packet(struct buffer_pool *, struct packet * packet);
 
 #ifdef __cplusplus
 }

@@ -34,8 +34,8 @@ enum create_listener_response { CREATE_LISTENER_FAIL, CREATE_LISTENER_SUCCEED };
 enum create_listener_response rsics_connect(const char * ip, const char * port,
 					    struct connection *);
 
-enum create_listener_response rsics_listen(const char * port,
-					   struct connection *);
+enum create_listener_response rsics_make_listener(const char * port,
+						  struct connection *);
 
 void rsics_free_connection(struct connection *);
 
