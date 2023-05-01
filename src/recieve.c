@@ -8,6 +8,9 @@
 #include "include/recieve.h"
 #include <netinet/in.h>
 
+lambda(void, message_callback, struct connection *, enum message_type, void *,
+       uint64_t);
+
 static uint8_t __get_sa_len(struct sockaddr * address) {
 	switch (address->sa_family) {
 	case AF_INET:
@@ -16,6 +19,18 @@ static uint8_t __get_sa_len(struct sockaddr * address) {
 		return sizeof(struct sockaddr_in6);
 	}
 	return 0;
+}
+
+static void _handle_packet(const struct message_callback * callback,
+			   struct connection * latest_connection,
+			   struct packet * latest_packet,
+			   struct buffer_pool * pool) {
+	int r = rsics_pool_add_packet(pool, latest_packet);
+	if (r != -1) {
+		callback->function(callback->context, latest_connection,
+				   MESSAGE_DATA, pool->buffers[r].data.buffer,
+				   pool->buffers[r].metadata.data_count);
+	}
 }
 
 void rsics_listen(struct connection * conn, bool * listening,
@@ -34,14 +49,8 @@ void rsics_listen(struct connection * conn, bool * listening,
 					  MESSAGE_ERR, NULL, 0);
 			break;
 		case RECIEVE_DATA: {
-			int r = rsics_pool_add_packet(&pool, &latest_packet);
-			if (r != -1) {
-				callback.function(
-					callback.context, &latest_connection,
-					MESSAGE_DATA,
-					pool.buffers[r].data.buffer,
-					pool.buffers[r].metadata.data_count);
-			}
+			_handle_packet(&callback, &latest_connection,
+				       &latest_packet, &pool);
 		} break;
 		case RECIEVE_PING:
 			callback.function(callback.context, &latest_connection,
