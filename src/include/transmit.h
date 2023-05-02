@@ -9,5 +9,12 @@
 #define transmit_h
 
 #include <stdio.h>
+#include "packet.h"
+#include "connection.h"
+
+enum transmit_response { TRANSMIT_FAIL, TRANSMIT_SEND };
+
+enum transmit_response transmit_packet(struct packet * packet,
+				       struct connection * to_computer);
 
 #endif /* transmit_h */
