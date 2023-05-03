@@ -1,74 +1,68 @@
 //
-//  models.c
-//  RSiCS
+//  connection.c
+//  RSiCSv2
 //
-//  Created by Ruben Ticehurst-James on 06/10/2022.
+//  Created by Ruben Ticehurst-James on 29/04/2023.
 //
 
-#include "include/models.h"
-
-#include <netdb.h>
+#include "include/connection.h"
 #include <stdlib.h>
-#include <stdio.h>
+#include <netdb.h>
 #include <string.h>
 #include <unistd.h>
 
-struct Computer * create_empty_computer() {
-	return malloc(sizeof(struct Computer));
+struct connection * rsics_init_connection() {
+	return malloc(sizeof(struct connection));
 }
 
-void free_computer(struct Computer * computer) {
-	free(computer);
-}
-
-enum AttachmentResponse create_computer(const char * ip, const char * port, struct Computer * computer) {
+enum create_listener_response rsics_connect(const char * ip, const char * port,
+					    struct connection * computer) {
 	int fd = 0, rv;
 	struct addrinfo hints, *servinfo, *p;
-	
+
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_DGRAM;
-	
+
 	if ((rv = getaddrinfo(ip, port, &hints, &servinfo)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-		return ATTACH_FAIL;
+		return CREATE_LISTENER_FAIL;
 	}
-	
-	
-	for(p = servinfo; p != NULL; p = p->ai_next) {
-		if ((fd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+
+	for (p = servinfo; p != NULL; p = p->ai_next) {
+		if ((fd = socket(p->ai_family, p->ai_socktype,
+				 p->ai_protocol)) == -1) {
 			perror("talker: socket");
 			continue;
 		}
 		break;
 	}
-	
 
-	
 	computer->file_descriptor = fd;
 	computer->socket_address = *(p->ai_addr);
 	computer->socket_address_size = p->ai_addrlen;
 	freeaddrinfo(servinfo);
-	
-	return ATTACH_SUCCESS;
+
+	return CREATE_LISTENER_SUCCEED;
 }
 
-
-enum AttachmentResponse create_listener(const char * port, struct Computer * computer) {
+enum create_listener_response
+rsics_make_listener(const char * port, struct connection * computer) {
 	int fd = 0, rv;
-	struct addrinfo * server_info, *p, hints;
+	struct addrinfo *server_info, *p, hints;
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_DGRAM;
 	hints.ai_flags = AI_PASSIVE;
-	
+
 	if ((rv = getaddrinfo(NULL, port, &hints, &server_info)) != 0) {
 		fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-		return ATTACH_FAIL;
+		return CREATE_LISTENER_FAIL;
 	}
-	 
-	for(p = server_info; p != NULL; p = p->ai_next) {
-		if ((fd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1) {
+
+	for (p = server_info; p != NULL; p = p->ai_next) {
+		if ((fd = socket(p->ai_family, p->ai_socktype,
+				 p->ai_protocol)) == -1) {
 			perror("listener: socket");
 			continue;
 		}
@@ -77,24 +71,24 @@ enum AttachmentResponse create_listener(const char * port, struct Computer * com
 			perror("listener: bind");
 			continue;
 		}
-		
+
 		break;
 	}
 
 	if (p == NULL) {
 		fprintf(stderr, "listener: failed to bind socket\n");
-		return ATTACH_FAIL;
+		return CREATE_LISTENER_FAIL;
 	}
-	
+
 	computer->file_descriptor = fd;
 	computer->socket_address = *(p->ai_addr);
 	computer->socket_address_size = (p->ai_addrlen);
 
 	freeaddrinfo(server_info);
 
-	return ATTACH_SUCCESS;
+	return CREATE_LISTENER_SUCCEED;
 }
 
-char sockaddr_cmp(struct sockaddr a, struct sockaddr b) {
-	return strcmp(a.sa_data, b.sa_data) == 0;
+void rsics_free_connection(struct connection * computer) {
+	free(computer);
 }

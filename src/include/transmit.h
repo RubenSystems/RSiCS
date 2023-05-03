@@ -1,32 +1,26 @@
 //
 //  transmit.h
-//  RSiCS
+//  RSiCSv2
 //
-//  Created by Ruben Ticehurst-James on 01/10/2022.
+//  Created by Ruben Ticehurst-James on 01/05/2023.
 //
 
 #ifndef transmit_h
 #define transmit_h
 
-#include "models.h"
+#include <stdio.h>
+#include "packet.h"
+#include "connection.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+enum transmit_response { TRANSMIT_FAIL, TRANSMIT_SEND };
 
-enum TransmitResponse {
-	TRANSMIT_FAIL,
-	TRANSMIT_SEND
-};
+enum transmit_response ping(struct connection * to_computer,
+			    const char * session_token);
 
-enum TransmitResponse ping(struct Computer *);
+enum transmit_response transmit(void * data, uint64_t length,
+				struct connection * computer);
 
-enum TransmitResponse transmit(void *, unsigned int, struct Computer *);
-
-enum TransmitResponse transmit_packet(struct Packet *, struct Computer *);
-
-#ifdef __cplusplus
-}
-#endif
+enum transmit_response transmit_packet(struct packet * packet,
+				       struct connection * to_computer);
 
 #endif /* transmit_h */
