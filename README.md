@@ -1,5 +1,6 @@
 # RSiCS
 *by chatgpt*
+
 RSiCS (Realtime Secure Communication System) is a custom transport layer protocol built on top of UDP, designed for efficient and fast communication with low overhead. It has been developed with a focus on efficiency for IoT devices and phones, but it can also be used in a standard client-server architecture for larger computers.
 
 ## Features
