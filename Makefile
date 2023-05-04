@@ -1,6 +1,6 @@
 CC = cc
 SRCS = $(shell find ./src -name "*.c")
-SRCS = $(shell find ./src/include -name "*.h")
+HDRS = $(shell find ./src/include -name "*.h")
 OBJS = $(patsubst %.c, %.o, $(SRCS))
 TARGET = librsics.so
 INSTALL_PATH = /usr/local/lib
