@@ -20,7 +20,7 @@ enum transmit_response rsics_ping(struct connection * to_computer,
 			       .data_size = strnlen(session_token,
 						    PACKET_DATA_SIZE - 1) };
 	strncpy(pack.transmit.data, session_token, PACKET_DATA_SIZE - 1);
-	return transmit_packet(&pack, to_computer);
+	return rsics_transmit_packet(&pack, to_computer);
 }
 
 enum transmit_response rsics_transmit(void * data, uint64_t length,
@@ -40,7 +40,7 @@ enum transmit_response rsics_transmit(void * data, uint64_t length,
 			data + (i * PACKET_DATA_SIZE),
 			(int)fmin(length - (i * PACKET_DATA_SIZE),
 				  PACKET_DATA_SIZE));
-		if (transmit_packet(&data_packet, computer) == TRANSMIT_FAIL) {
+		if (rsics_transmit_packet(&data_packet, computer) == TRANSMIT_FAIL) {
 			success = 0;
 		};
 	}
