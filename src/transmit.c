@@ -10,7 +10,7 @@
 #include <stdbool.h>
 #include <math.h>
 
-enum transmit_response ping(struct connection * to_computer,
+enum transmit_response rsics_ping(struct connection * to_computer,
 			    const char * session_token) {
 	static struct packet_header header = {
 		.index = 0, .flags = PACKET_FINAL | PACKET_PING
@@ -23,7 +23,7 @@ enum transmit_response ping(struct connection * to_computer,
 	return transmit_packet(&pack, to_computer);
 }
 
-enum transmit_response transmit(void * data, uint64_t length,
+enum transmit_response rsics_transmit(void * data, uint64_t length,
 				struct connection * computer) {
 	bool success = 1;
 	struct packet data_packet;
@@ -47,7 +47,7 @@ enum transmit_response transmit(void * data, uint64_t length,
 	return success ? TRANSMIT_SEND : TRANSMIT_FAIL;
 }
 
-enum transmit_response transmit_packet(struct packet * packet,
+enum transmit_response rsics_transmit_packet(struct packet * packet,
 				       struct connection * to_computer) {
 	static uint8_t uid = 0;
 
