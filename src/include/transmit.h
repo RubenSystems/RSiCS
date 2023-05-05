@@ -19,13 +19,13 @@ extern "C" {
 enum transmit_response { TRANSMIT_FAIL, TRANSMIT_SEND };
 
 enum transmit_response rsics_ping(struct connection * to_computer,
-			    const char * session_token);
+				  const char * session_token);
 
 enum transmit_response rsics_transmit(void * data, uint64_t length,
-				struct connection * computer);
+				      struct connection * computer);
 
 enum transmit_response rsics_transmit_packet(struct packet * packet,
-				       struct connection * to_computer);
+					     struct connection * to_computer);
 
 #ifdef __cplusplus
 }

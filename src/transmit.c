@@ -11,7 +11,7 @@
 #include <math.h>
 
 enum transmit_response rsics_ping(struct connection * to_computer,
-			    const char * session_token) {
+				  const char * session_token) {
 	static struct packet_header header = {
 		.index = 0, .flags = PACKET_FINAL | PACKET_PING
 	};
@@ -24,31 +24,26 @@ enum transmit_response rsics_ping(struct connection * to_computer,
 }
 
 enum transmit_response rsics_transmit(void * data, uint64_t length,
-				struct connection * computer) {
+				      struct connection * computer) {
+	struct packet pack;
 	bool success = 1;
-	struct packet data_packet;
-	for (int i = 0; i <= ceil(length / PACKET_DATA_SIZE); i += 1) {
-		data_packet.transmit.header.index = i;
-		data_packet.transmit.header.flags = PACKET_DATA;
-		if (length - (i * PACKET_DATA_SIZE))
-			data_packet.transmit.header.flags |= PACKET_FINAL;
-
-		data_packet.data_size = (int)fmin(
-			length - (i * PACKET_DATA_SIZE), PACKET_DATA_SIZE);
-
-		memmove(&(data_packet.transmit.data),
-			data + (i * PACKET_DATA_SIZE),
-			(int)fmin(length - (i * PACKET_DATA_SIZE),
-				  PACKET_DATA_SIZE));
-		if (rsics_transmit_packet(&data_packet, computer) == TRANSMIT_FAIL) {
+	uint32_t index = 0;
+	for (int sent = 0; sent < length; sent += PACKET_DATA_SIZE) {
+		pack.transmit.header.index = index++;
+		pack.transmit.header.flags = PACKET_DATA;
+		if (length - sent <= PACKET_DATA_SIZE)
+			pack.transmit.header.flags |= PACKET_FINAL;
+		memmove(pack.transmit.data, data + sent,
+			(uint32_t)fmin(length - sent, PACKET_DATA_SIZE));
+		if (rsics_transmit_packet(&pack, computer) == TRANSMIT_FAIL)
 			success = 0;
-		};
+		printf("SENT %i\n", (int)fmin(length - sent, PACKET_DATA_SIZE));
 	}
-	return success ? TRANSMIT_SEND : TRANSMIT_FAIL;
+	return success == 0 ? TRANSMIT_SEND : TRANSMIT_FAIL;
 }
 
 enum transmit_response rsics_transmit_packet(struct packet * packet,
-				       struct connection * to_computer) {
+					     struct connection * to_computer) {
 	static uint8_t uid = 0;
 
 	uid = (uid + 1) / UCHAR_MAX;
