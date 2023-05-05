@@ -8,7 +8,7 @@ FLAGS = -O3
 
 all: main
 
-install: main
+install:
 	cp $(TARGET) $(INSTALL_PATH)/$(TARGET)
 
 
