@@ -25,11 +25,12 @@ static void _handle_packet(const struct message_callback * callback,
 			   struct connection * latest_connection,
 			   struct packet * latest_packet,
 			   struct buffer_pool * pool) {
-	int r = rsics_pool_add_packet(pool, latest_packet);
+	int16_t r = rsics_pool_add_packet(pool, latest_packet);
 	if (r != -1) {
 		callback->function(callback->context, latest_connection,
 				   MESSAGE_DATA, pool->buffers[r].data.buffer,
 				   pool->buffers[r].metadata.data_count);
+		
 	}
 }
 

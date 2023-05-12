@@ -41,7 +41,7 @@ void rsics_init_buffer(struct buffer *);
 	 Adding to buffer
 	 */
 
-enum buffer_add_response { BUFFER_COMPLETE, BUFFER_INCOMPLETE };
+enum buffer_add_response { BUFFER_COMPLETE = 1, BUFFER_INCOMPLETE = 0 };
 
 enum buffer_add_response rsics_add_to_buffer(struct buffer *, struct packet *);
 

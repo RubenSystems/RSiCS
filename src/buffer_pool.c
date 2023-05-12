@@ -13,6 +13,8 @@
 
 void rsics_init_pool(struct buffer_pool * pool) {
 	pool->buffers = malloc(sizeof(struct buffer) * BUFFER_POOL_SIZE);
+	for (int i = 0; i < BUFFER_POOL_SIZE; i ++)
+		rsics_init_buffer(&pool->buffers[i]);
 }
 
 void rsics_close_pool(struct buffer_pool * pool) {
@@ -33,15 +35,19 @@ static uint16_t reset_buffers(struct buffer_pool * pool) {
 
 int16_t rsics_pool_add_packet(struct buffer_pool * pool,
 			      struct packet * packet) {
+	
 	int16_t latest_available_frame = -1;
 	for (int i = 0; i < BUFFER_POOL_SIZE; i++) {
 		// if pool id == packet id and adding to the buffer makes it complete
 		if (pool->buffers[i].metadata.frame_id ==
-			    packet->transmit.header.uid &&
-		    rsics_add_to_buffer(&pool->buffers[i], packet) ==
-			    BUFFER_COMPLETE) {
-			return i;
-		} else if (pool->buffers[i].metadata.read_available) {
+			    packet->transmit.header.uid) {
+			if (rsics_add_to_buffer(&pool->buffers[i], packet) ==
+				BUFFER_COMPLETE) {
+				return i;
+			} else {
+				return -1;
+			}
+		} else if (pool->buffers[i].metadata.read_available && latest_available_frame == -1) {
 			latest_available_frame = i;
 		}
 	}
