@@ -9,7 +9,7 @@
 #define packet_h
 
 #include "config.h"
-#define PACKET_DATA_SIZE MTU - sizeof(struct packet_header)
+#define PACKET_DATA_SIZE (MTU - sizeof(struct packet_header))
 
 #ifdef __cplusplus
 extern "C" {

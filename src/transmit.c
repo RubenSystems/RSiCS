@@ -10,6 +10,8 @@
 #include <stdbool.h>
 #include <math.h>
 
+
+
 enum transmit_response rsics_ping(struct connection * to_computer,
 				  const char * session_token) {
 	static struct packet_header header = {
@@ -31,13 +33,15 @@ enum transmit_response rsics_transmit(void * data, uint64_t length,
 	for (int sent = 0; sent < length; sent += PACKET_DATA_SIZE) {
 		pack.transmit.header.index = index++;
 		pack.transmit.header.flags = PACKET_DATA;
-		if (length - sent <= PACKET_DATA_SIZE)
+		if (length - sent < PACKET_DATA_SIZE)
 			pack.transmit.header.flags |= PACKET_FINAL;
-		memmove(pack.transmit.data, data + sent,
-			(uint32_t)fmin(length - sent, PACKET_DATA_SIZE));
+		
+		uint32_t send_size = (uint32_t)fmin(length - sent, PACKET_DATA_SIZE);
+		memmove(pack.transmit.data, data + sent, send_size);
+		pack.data_size = send_size;
+
 		if (rsics_transmit_packet(&pack, computer) == TRANSMIT_FAIL)
 			success = 0;
-		printf("SENT %i\n", (int)fmin(length - sent, PACKET_DATA_SIZE));
 	}
 	return success == 0 ? TRANSMIT_SEND : TRANSMIT_FAIL;
 }

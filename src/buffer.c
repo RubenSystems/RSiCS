@@ -7,6 +7,8 @@
 
 #include "include/buffer.h"
 #include <string.h>
+#include <stdio.h>
+
 void rsics_init_buffer(struct buffer * buffer) {
 	memset(buffer->data.buffer, 0, sizeof(buffer->data.buffer));
 	rsics_reset_buffer(buffer);
@@ -23,9 +25,8 @@ enum buffer_add_response rsics_add_to_buffer(struct buffer * buf,
 					     struct packet * packet) {
 	//	unlocked below
 	memmove(&buf->data.buffer[PACKET_DATA_SIZE *
-				  packet->transmit.header.index],
+			packet->transmit.header.index],
 		packet->transmit.data, packet->data_size);
-
 	// unlocked in both exit conditions
 	buf->metadata.recieved_packets++;
 	buf->metadata.data_count += packet->data_size;
