@@ -11,12 +11,19 @@
 #include <math.h>
 
 
+static PACKET_ID_SIZE __get_next_uid() {
+	static uint8_t uid = 0;
+
+	uid = (uid + 1) % MAX_PACKET_ID;
+	return uid; 
+}
 
 enum transmit_response rsics_ping(struct connection * to_computer,
 				  const char * session_token) {
 	static struct packet_header header = {
 		.index = 0, .flags = PACKET_FINAL | PACKET_PING
 	};
+	header.uid = __get_next_uid(); 
 
 	struct packet pack = { .transmit = { .header = header },
 			       .data_size = strnlen(session_token,
@@ -30,10 +37,12 @@ enum transmit_response rsics_transmit(void * data, uint64_t length,
 	struct packet pack;
 	bool success = 1;
 	uint32_t index = 0;
+	pack.transmit.header.uid = __get_next_uid(); 
 	for (int sent = 0; sent < length; sent += PACKET_DATA_SIZE) {
 		pack.transmit.header.index = index++;
 		pack.transmit.header.flags = PACKET_DATA;
-		if (length - sent < PACKET_DATA_SIZE)
+		
+		if (length - sent <= PACKET_DATA_SIZE)
 			pack.transmit.header.flags |= PACKET_FINAL;
 		
 		uint32_t send_size = (uint32_t)fmin(length - sent, PACKET_DATA_SIZE);
@@ -48,10 +57,6 @@ enum transmit_response rsics_transmit(void * data, uint64_t length,
 
 enum transmit_response rsics_transmit_packet(struct packet * packet,
 					     struct connection * to_computer) {
-	static uint8_t uid = 0;
-
-	uid = (uid + 1) / UCHAR_MAX;
-	packet->transmit.header.uid = uid;
 
 	if (sendto(to_computer->file_descriptor, (void *)&((*packet).transmit),
 		   sizeof(packet->transmit.header) + packet->data_size, 0,
