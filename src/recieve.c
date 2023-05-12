@@ -70,7 +70,7 @@ enum recieve_response rsics_recieve_once(struct connection * to,
 	socklen_t storage_size = sizeof(struct sockaddr_storage);
 	int data_size;
 	if ((data_size = (int)recvfrom(
-		     to->file_descriptor, (void *)&(packet->transmit), MTU, 0,
+		     to->file_descriptor, (void *)&packet->transmit, MTU, 0,
 		     (struct sockaddr *)&storage, &storage_size)) == -1) {
 		return RECIEVE_FAIL;
 	}

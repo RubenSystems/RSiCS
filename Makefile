@@ -2,7 +2,7 @@ CC = cc
 SRCS = $(shell find ./src -name "*.c")
 HDRS = $(shell find ./src/include -name "*.h")
 OBJS = $(patsubst %.c, %.o, $(SRCS))
-TARGET = librsics.so
+TARGET = librsics2.so
 INSTALL_PATH = /usr/local/lib
 FLAGS = -O3
 

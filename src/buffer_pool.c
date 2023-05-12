@@ -35,7 +35,6 @@ static uint16_t reset_buffers(struct buffer_pool * pool) {
 
 int16_t rsics_pool_add_packet(struct buffer_pool * pool,
 			      struct packet * packet) {
-	
 	int16_t latest_available_frame = -1;
 	for (int i = 0; i < BUFFER_POOL_SIZE; i++) {
 		// if pool id == packet id and adding to the buffer makes it complete
