@@ -24,14 +24,11 @@ struct buffer {
 		int32_t required_packets;
 		int32_t frame_id;
 		uint64_t data_count;
-		bool read_available;
-		pthread_mutex_t mutex;
 	} metadata;
 
 	struct {
 		char buffer[MAX_PACKETS_IN_BUFFER *
 			    (MTU - sizeof(struct packet_header))];
-		pthread_mutex_t mutex;
 	} data;
 };
 

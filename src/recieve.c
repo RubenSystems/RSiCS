@@ -25,14 +25,13 @@ static void _handle_packet(const struct message_callback * callback,
 			   struct connection * latest_connection,
 			   struct packet * latest_packet,
 			   struct buffer_pool * pool) {
-	int16_t r = rsics_pool_add_packet(pool, latest_packet);
-	if (r != -1) {
+	if (rsics_pool_add_packet(pool, latest_packet)) {
 		callback->function(callback->context, latest_connection,
-				   MESSAGE_DATA, pool->buffers[r].data.buffer,
-				   pool->buffers[r].metadata.data_count);
-		
+				   MESSAGE_DATA, pool->active->data.buffer,
+				   pool->active->metadata.data_count);
 	}
 }
+
 
 void rsics_listen(struct connection * conn, bool * listening,
 		  struct message_callback callback) {
@@ -61,6 +60,7 @@ void rsics_listen(struct connection * conn, bool * listening,
 			break;
 		}
 	}
+	rsics_close_pool(&pool);
 }
 
 enum recieve_response rsics_recieve_once(struct connection * to,

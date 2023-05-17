@@ -14,16 +14,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+	
 struct buffer_pool {
-	struct buffer * buffers;
+	struct buffer * active;
+	struct buffer ** running;
 };
 
 void rsics_init_pool(struct buffer_pool *);
 
 void rsics_close_pool(struct buffer_pool *);
 
-int16_t rsics_pool_add_packet(struct buffer_pool *, struct packet * packet);
+bool rsics_pool_add_packet(struct buffer_pool *, struct packet * packet);
 
 #ifdef __cplusplus
 }
