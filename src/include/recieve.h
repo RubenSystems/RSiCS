@@ -27,7 +27,7 @@ enum message_type { MESSAGE_DATA, MESSAGE_ERR, MESSAGE_PING };
 lambda_defs(void, message_callback, struct connection *, enum message_type,
 	    void *, uint64_t);
 
-void rsics_listen(struct connection *, bool *, struct message_callback);
+void rsics_listen(struct connection *, bool *, struct message_callback *);
 
 enum recieve_response rsics_recieve_once(struct connection *, struct packet *,
 					 struct connection *);

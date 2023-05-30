@@ -35,7 +35,7 @@ static void _handle_packet(const struct message_callback * callback,
 
 
 void rsics_listen(struct connection * conn, bool * listening,
-		  struct message_callback callback) {
+		  struct message_callback * callback) {
 	struct buffer_pool pool;
 	rsics_init_pool(&pool);
 	struct packet latest_packet;
@@ -46,7 +46,7 @@ void rsics_listen(struct connection * conn, bool * listening,
 
 		switch (r) {
 		case RECIEVE_FAIL:
-			callback.function(callback.context, &latest_connection,
+			callback->function(callback->context, &latest_connection,
 					  MESSAGE_ERR, NULL, 0);
 			break;
 		case RECIEVE_DATA: {
@@ -54,7 +54,7 @@ void rsics_listen(struct connection * conn, bool * listening,
 				       &latest_packet, &pool);
 		} break;
 		case RECIEVE_PING:
-			callback.function(callback.context, &latest_connection,
+			callback->function(callback->context, &latest_connection,
 					  MESSAGE_PING,
 					  latest_packet.transmit.data,
 					  latest_packet.data_size);
