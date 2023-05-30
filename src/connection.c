@@ -15,10 +15,6 @@ struct connection * rsics_init_connection() {
 	return malloc(sizeof(struct connection));
 }
 
-void rsics_free_connection(struct connection * conn) {
-	free(conn);
-}
-
 enum create_listener_response rsics_connect(const char * ip, const char * port,
 					    struct connection * computer) {
 	int fd = 0, rv;
