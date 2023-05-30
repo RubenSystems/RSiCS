@@ -50,7 +50,7 @@ void rsics_listen(struct connection * conn, bool * listening,
 					  MESSAGE_ERR, NULL, 0);
 			break;
 		case RECIEVE_DATA: {
-			_handle_packet(&callback, &latest_connection,
+			_handle_packet(callback, &latest_connection,
 				       &latest_packet, &pool);
 		} break;
 		case RECIEVE_PING:
