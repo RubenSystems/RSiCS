@@ -8,13 +8,23 @@
 #ifndef lambda_h
 #define lambda_h
 
-#include <stdio.h>
+#include <stdlib.h>
 
 #define lambda(ret_val, name, ...)                                  \
 	struct name create_##name(void * context,                   \
 				  __##name##_lambda_f_p function) { \
 		struct name ret = { context, function };            \
 		return ret;                                         \
+	}\
+	struct name * alloc_##name(void * context,                   \
+				  __##name##_lambda_f_p function) { \
+struct name * ret = malloc(sizeof (struct name));\
+		struct name _ret = { context, function };            \
+		*ret = _ret; \
+		return ret;                                         \
+	}\
+	void delete_##name(struct name * lambda) {\
+		free(lambda);\
 	}
 
 #define lambda_defs(ret_val, name, ...)                                \
@@ -24,6 +34,9 @@
 		__##name##_lambda_f_p function;                        \
 	};                                                             \
 	struct name create_##name(void * context,                      \
-				  __##name##_lambda_f_p function);
+				  __##name##_lambda_f_p function);				\
+	struct name * alloc_##name(void * context,                      \
+			  __##name##_lambda_f_p function);\
+	void delete_##name(struct name *);
 
 #endif /* lambda_h */
