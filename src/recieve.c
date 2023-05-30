@@ -26,6 +26,7 @@ static void _handle_packet(const struct message_callback * callback,
 			   struct packet * latest_packet,
 			   struct buffer_pool * pool) {
 	if (rsics_pool_add_packet(pool, latest_packet)) {
+		
 		callback->function(callback->context, latest_connection,
 				   MESSAGE_DATA, pool->active->data.buffer,
 				   pool->active->metadata.data_count);

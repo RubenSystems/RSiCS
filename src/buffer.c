@@ -31,7 +31,7 @@ enum buffer_add_response rsics_add_to_buffer(struct buffer * buf,
 		buf->metadata.required_packets = packet->transmit.header.index;
 
 	if (buf->metadata.required_packets != -1 &&
-	    buf->metadata.recieved_packets >= buf->metadata.required_packets) {
+	    buf->metadata.recieved_packets > buf->metadata.required_packets) {
 		return BUFFER_COMPLETE;
 	} else {
 		return BUFFER_INCOMPLETE;

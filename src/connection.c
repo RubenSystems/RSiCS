@@ -15,7 +15,7 @@ struct connection * rsics_init_connection() {
 	return malloc(sizeof(struct connection));
 }
 
-void rsics_close_connecion(struct connection * conn) {
+void rsics_free_connection(struct connection * conn) {
 	free(conn);
 }
 

@@ -47,8 +47,6 @@ static void flip_buffer(struct buffer ** a, struct buffer ** b) {
 	struct buffer * tmp = *a;
 	*a = *b;
 	*b = tmp;
-	
-//	memmove(*a, *b, sizeof(struct buffer));
 }
 
 bool rsics_pool_add_packet(struct buffer_pool * pool,

@@ -19,7 +19,7 @@
 
 #define MTU 1468
 
-#define MAX_PACKETS_IN_BUFFER 70
+#define MAX_PACKETS_IN_BUFFER 255
 
 #define BUFFER_POOL_SIZE 5
 
