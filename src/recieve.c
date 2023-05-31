@@ -7,9 +7,10 @@
 
 #include "include/recieve.h"
 #include <netinet/in.h>
+#include <arpa/inet.h>
 
-lambda(void, message_callback, struct connection *, enum message_type, void *,
-       uint64_t);
+lambda(void, message_callback, struct connection *, enum message_type,
+       const char *, void *, uint64_t);
 
 static uint8_t __get_sa_len(struct sockaddr * address) {
 	switch (address->sa_family) {
@@ -23,16 +24,17 @@ static uint8_t __get_sa_len(struct sockaddr * address) {
 
 static void _handle_packet(const struct message_callback * callback,
 			   struct connection * latest_connection,
-			   struct packet * latest_packet,
+			   char * ip_buffer, struct packet * latest_packet,
 			   struct buffer_pool * pool) {
 	if (rsics_pool_add_packet(pool, latest_packet)) {
-		
+		inet_ntop(AF_INET, latest_connection->socket_address.sa_data,
+			  ip_buffer, INET_ADDRSTRLEN);
 		callback->function(callback->context, latest_connection,
-				   MESSAGE_DATA, pool->active->data.buffer,
+				   MESSAGE_DATA, ip_buffer,
+				   pool->active->data.buffer,
 				   pool->active->metadata.data_count);
 	}
 }
-
 
 void rsics_listen(struct connection * conn, bool * listening,
 		  struct message_callback * callback) {
@@ -40,25 +42,34 @@ void rsics_listen(struct connection * conn, bool * listening,
 	rsics_init_pool(&pool);
 	struct packet latest_packet;
 	struct connection latest_connection;
+	char ip_buffer[INET_ADDRSTRLEN];
 	while (*listening) {
 		enum recieve_response r = rsics_recieve_once(
 			conn, &latest_packet, &latest_connection);
 
 		switch (r) {
-		case RECIEVE_FAIL:
-			callback->function(callback->context, &latest_connection,
-					  MESSAGE_ERR, NULL, 0);
-			break;
+		case RECIEVE_FAIL: {
+			inet_ntop(AF_INET,
+				  latest_connection.socket_address.sa_data,
+				  ip_buffer, INET_ADDRSTRLEN);
+			callback->function(callback->context,
+					   &latest_connection, MESSAGE_ERR,
+					   ip_buffer, NULL, 0);
+		} break;
 		case RECIEVE_DATA: {
-			_handle_packet(callback, &latest_connection,
+			_handle_packet(callback, &latest_connection, ip_buffer,
 				       &latest_packet, &pool);
 		} break;
-		case RECIEVE_PING:
-			callback->function(callback->context, &latest_connection,
-					  MESSAGE_PING,
-					  latest_packet.transmit.data,
-					  latest_packet.data_size);
-			break;
+		case RECIEVE_PING: {
+			inet_ntop(AF_INET,
+				  latest_connection.socket_address.sa_data,
+				  ip_buffer, INET_ADDRSTRLEN);
+			callback->function(callback->context,
+					   &latest_connection, MESSAGE_PING,
+					   ip_buffer,
+					   latest_packet.transmit.data,
+					   latest_packet.data_size);
+		} break;
 		}
 	}
 	rsics_close_pool(&pool);

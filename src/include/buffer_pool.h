@@ -14,7 +14,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
+
 struct buffer_pool {
 	struct buffer * active;
 	struct buffer ** running;

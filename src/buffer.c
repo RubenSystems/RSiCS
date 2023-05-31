@@ -12,7 +12,6 @@
 void rsics_init_buffer(struct buffer * buffer) {
 	memset(buffer->data.buffer, 0, sizeof(buffer->data.buffer));
 	rsics_reset_buffer(buffer);
-
 }
 
 /*
@@ -37,7 +36,6 @@ enum buffer_add_response rsics_add_to_buffer(struct buffer * buf,
 		return BUFFER_INCOMPLETE;
 	}
 }
-
 
 void rsics_reset_buffer(struct buffer * buf) {
 	buf->metadata.frame_id = -1;

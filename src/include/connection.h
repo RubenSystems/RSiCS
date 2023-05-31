@@ -22,7 +22,7 @@ struct connection {
 };
 
 void rsics_close_connecion(struct connection * conn);
-	
+
 /*
 	 * Create an empty connection
 	 */
